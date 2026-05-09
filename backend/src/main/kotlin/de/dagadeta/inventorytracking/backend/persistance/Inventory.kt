@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 data class InventoryItemLent(
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    val id: Long,
+    var id: Long = 0,
 
     @ManyToOne
     @JoinColumn
@@ -27,7 +27,7 @@ data class InventoryItemLent(
 data class InventoryItem(
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    val id: Long,
+    var id: Long = 0,
     val name: String,
     val amount: Int,
 )

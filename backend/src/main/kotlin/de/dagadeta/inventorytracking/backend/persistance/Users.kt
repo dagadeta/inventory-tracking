@@ -11,7 +11,7 @@ import jakarta.persistence.Table
 data class User(
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    val id: Long,
+    var id: Long = 0,
     val username: String,
     val role: UserRole,
 )
