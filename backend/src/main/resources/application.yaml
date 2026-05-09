@@ -1,4 +1,23 @@
 spring:
   application:
     name: inventory-tracking
+  datasource:
+    url: jdbc:postgresql://localhost:5432/inventory
+    username: pguser
+    password: pguser
+  jpa:
+    hibernate:
+      #      ddl-auto: update
+      ddl-auto: validate
+    # show-sql: true
+  # for tests and development: let flyway search for the flyway_schema_history table in the right schema
+  flyway:
+    schemas:
+      - inventory
 
+zonky:
+  test:
+    database:
+      postgres:
+        docker:
+          image: postgres:16.9

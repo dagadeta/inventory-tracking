@@ -1,14 +1,18 @@
 [versions]
+flyway-plugin = "12.5.0"
 junit-jupiter = "6.0.1"
 kotlin = "2.3.20"
 kover = "0.9.8"
 spring = "4.0.6"
 spring-dependency-management = "1.1.7"
+zonky = "2.8.0"
 
 [libraries]
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
+zonky = { module = "io.zonky.test:embedded-database-spring-test", version.ref = "zonky" }
 
 [plugins]
+flyway = { id = "org.flywaydb.flyway", version.ref = "flyway-plugin" }
 kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin"}
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin"}
