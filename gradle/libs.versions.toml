@@ -1,7 +1,7 @@
 [versions]
 flyway-plugin = "12.5.0"
 junit-jupiter = "6.0.3"
-kotlin = "2.3.20"
+kotlin = "2.3.21"
 kover = "0.9.8"
 spring = "4.0.6"
 spring-dependency-management = "1.1.7"
