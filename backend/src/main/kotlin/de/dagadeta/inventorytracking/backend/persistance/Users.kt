@@ -13,7 +13,7 @@ data class InventoryUser(
     @GeneratedValue(strategy = IDENTITY)
     var id: Long = 0,
     val name: String,
-    val password: String,
+    var password: String,
     val role: UserRole,
 )
 

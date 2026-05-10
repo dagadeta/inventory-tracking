@@ -21,3 +21,9 @@ zonky:
       postgres:
         docker:
           image: postgres:18.4
+
+logging:
+  level:
+    org:
+      springframework:
+        security: INFO
