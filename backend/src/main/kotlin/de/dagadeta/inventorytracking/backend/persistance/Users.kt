@@ -13,6 +13,7 @@ data class User(
     @GeneratedValue(strategy = IDENTITY)
     var id: Long = 0,
     val username: String,
+    val password: String,
     val role: UserRole,
 )
 

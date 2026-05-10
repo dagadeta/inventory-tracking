@@ -31,7 +31,7 @@ class DatabaseIntegrationTest {
 
     @Test
     fun `a saved user can be read`() {
-        usersRepository.save(User(username = "Someone", role = ADMIN))
+        usersRepository.save(User(username = "Someone", password = "", role = ADMIN))
 
         usersRepository.findAll().single().let {
             assertThat(it.id).isNotEqualTo(0)
@@ -54,7 +54,7 @@ class DatabaseIntegrationTest {
     @Test
     fun `a saved inventory item lent saves referenced objects, too`() {
         val startTime = now()
-        val user = User(username = "Someone else", role = USER)
+        val user = User(username = "Someone else", password = "", role = USER)
         val item = InventoryItem(name = "Cooling pack", amount = 1)
 
         val savedUser = usersRepository.save(user)

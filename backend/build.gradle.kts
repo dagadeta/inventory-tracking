@@ -29,6 +29,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("tools.jackson.module:jackson-module-kotlin")
     implementation(project(":common"))
+    implementation(libs.kotlin.logging)
+
+    // server-side UI -> remove when a separate UI is implemented
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
 
     runtimeOnly("org.postgresql:postgresql")
 
