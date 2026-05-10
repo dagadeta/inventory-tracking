@@ -21,8 +21,8 @@ class DemoDataCreator(
         if (usersRepository.count() > 0L) return
 
         log.info { "Creating demo data" }
-        usersRepository.save(User(username = "Admin", password = "", role = ADMIN))
-        val user = usersRepository.save(User(username = "Default User", password = "", role = USER))
+        usersRepository.save(InventoryUser(name = "Admin", password = "very secret", role = ADMIN))
+        val user = usersRepository.save(InventoryUser(name = "Default User", password = "secret", role = USER))
 
         val coolingPack = inventoryRepository.save(InventoryItem(name = "Cooling Pack", amount = 10))
         val walkingAid = inventoryRepository.save(InventoryItem(name = "Walking Aid", amount = 4))

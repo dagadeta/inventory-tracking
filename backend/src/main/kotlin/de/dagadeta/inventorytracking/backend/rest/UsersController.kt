@@ -1,6 +1,6 @@
 package de.dagadeta.inventorytracking.backend.rest
 
-import de.dagadeta.inventorytracking.backend.persistance.User
+import de.dagadeta.inventorytracking.backend.persistance.InventoryUser
 import de.dagadeta.inventorytracking.backend.persistance.UserRole
 import de.dagadeta.inventorytracking.backend.persistance.UsersRepository
 import de.dagadeta.inventorytracking.common.model.UserDto
@@ -23,6 +23,6 @@ class UsersController(
     }
 }
 
-fun User.toDto() = UserDto(id, username, role.toDto())
+fun InventoryUser.toDto() = UserDto(id, name, role.toDto())
 
 fun UserRole.toDto() = UserRoleDto.valueOf(name)

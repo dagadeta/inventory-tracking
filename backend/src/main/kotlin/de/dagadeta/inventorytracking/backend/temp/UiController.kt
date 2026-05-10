@@ -1,6 +1,8 @@
 package de.dagadeta.inventorytracking.backend.temp
 
+import de.dagadeta.inventorytracking.backend.config.LoginUtilityService
 import de.dagadeta.inventorytracking.backend.persistance.InventoryRepository
+import de.dagadeta.inventorytracking.backend.persistance.InventoryUser
 import de.dagadeta.inventorytracking.backend.rest.toDto
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Controller
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 class UiController(
     private val inventoryRepository: InventoryRepository,
+    private val loginUtilityService: LoginUtilityService,
 ) {
 
     private val logger = KotlinLogging.logger {}
@@ -39,6 +42,10 @@ class UiController(
         val label = String.format(screenLabel, "PROTECTED-PAGE")
         logger.info { "Request - $label" }
         model.addAttribute("label", label)
+
+        val user: InventoryUser? = loginUtilityService.loggedInUser
+        if (user != null) model.addAttribute("userName", user.name)
+
         return "home"
     }
 

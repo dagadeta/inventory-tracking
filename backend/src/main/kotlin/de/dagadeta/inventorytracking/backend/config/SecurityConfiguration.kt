@@ -8,14 +8,18 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.crypto.password.NoOpPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfiguration {
+class SecurityConfiguration(
+    private val loginUtilityService: LoginUtilityService,
+) {
 
-    // 1. Define SecurityFilterChain for API (Basic Authetication)
+    // 1. Define SecurityFilterChain for API (Basic Authentication)
     @Bean
     @Order(1)
     fun basicAuthSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -23,10 +27,6 @@ class SecurityConfiguration {
         return http
             .securityMatcher("/api/**")
             .authorizeHttpRequests { request ->
-                request.requestMatchers(
-                    "/api/inventory/**",
-                    "/api/users/**",
-                ).permitAll()
                 request.anyRequest().authenticated()
             }
             .sessionManagement { session ->
@@ -51,9 +51,17 @@ class SecurityConfiguration {
             .build()
     }
 
-    // 3. Ignore static directors / urls (images, javascript files etc.)
+    // 3. Ignore static directories / URLs (images, javascript files etc.)
     @Bean
     fun webSecurityCustomizer(): WebSecurityCustomizer {
         return WebSecurityCustomizer { web -> web.ignoring().requestMatchers("/images/**", "/js/**") }
     }
+
+    // 4. Custom User Details Service to manage User instance
+    @Bean
+    fun userDetailsService() = UserDetailsService { userName: String? -> loginUtilityService.findMatch(userName) }
+
+    // 5. Password encoder
+    @Bean
+    fun getPasswordEncoder() = NoOpPasswordEncoder.getInstance()
 }
