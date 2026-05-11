@@ -6,9 +6,11 @@ import io.zonky.test.db.AutoConfigureEmbeddedDatabase
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest
 import org.springframework.dao.DataIntegrityViolationException
+import org.springframework.dao.InvalidDataAccessApiUsageException
 import java.time.LocalDateTime.now
 
 @DataJpaTest
@@ -65,7 +67,7 @@ class DatabaseIntegrationTest {
     }
 
     @Test
-    fun `a saved inventory item lent saves referenced objects, too`() {
+    fun `a saved inventory item lent needs referenced objects to be saved before`() {
         val startTime = now()
         val user = InventoryUser(name = "Someone else", password = "", role = USER)
         val item = InventoryItem(name = "Cooling pack", amount = 1)
@@ -86,5 +88,39 @@ class DatabaseIntegrationTest {
                 .isEqualTo(item)
             assertThat(it.timestamp).isBetween(startTime, now())
         }
+    }
+
+    @Test
+    fun `an InventoryUser cannot be deleted as long as an InventoryItemLent references it`() {
+        val user = InventoryUser(name = "Someone else", password = "", role = USER)
+        val item = InventoryItem(name = "Cooling pack", amount = 1)
+
+        val savedUser = usersRepository.save(user)
+        val savedItem = inventoryRepository.save(item)
+        val lent = InventoryItemLent(item = savedItem, lentBy = savedUser, lentTo = "Freddie Mercury")
+        inventoryLentRepository.save(lent)
+
+        val exception = assertThrows<InvalidDataAccessApiUsageException> {
+            usersRepository.deleteById(savedUser.id)
+            usersRepository.flush()
+        }
+        assertThat(exception.message).contains("Persistent instance of 'de.dagadeta.inventorytracking.backend.persistance.InventoryItemLent' references an unsaved transient instance of 'de.dagadeta.inventorytracking.backend.persistance.InventoryUser'")
+    }
+
+    @Test
+    fun `an InventoryItem cannot be deleted as long as an InventoryItemLent references it`() {
+        val user = InventoryUser(name = "Someone else", password = "", role = USER)
+        val item = InventoryItem(name = "Cooling pack", amount = 1)
+
+        val savedUser = usersRepository.save(user)
+        val savedItem = inventoryRepository.save(item)
+        val lent = InventoryItemLent(item = savedItem, lentBy = savedUser, lentTo = "Freddie Mercury")
+        inventoryLentRepository.save(lent)
+
+        val exception = assertThrows<InvalidDataAccessApiUsageException> {
+            inventoryRepository.deleteById(savedItem.id)
+            inventoryRepository.flush()
+        }
+        assertThat(exception.message).contains("Persistent instance of 'de.dagadeta.inventorytracking.backend.persistance.InventoryItemLent' references an unsaved transient instance of 'de.dagadeta.inventorytracking.backend.persistance.InventoryItem'")
     }
 }
