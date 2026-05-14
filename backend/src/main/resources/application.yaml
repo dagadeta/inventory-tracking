@@ -1,6 +1,8 @@
 spring:
   application:
     name: inventory-tracking
+  main:
+    banner-mode: off
   datasource:
     url: jdbc:postgresql://localhost:5432/inventory
     username: pguser
