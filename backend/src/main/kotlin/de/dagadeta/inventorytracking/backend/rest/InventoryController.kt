@@ -15,7 +15,6 @@ class InventoryController(
     private val inventoryRepository: InventoryRepository,
 ) {
     @GetMapping("/items")
-    // TODO use PagedModel
     fun getInventoryItems(pageable: Pageable): Page<InventoryItemDto> {
         return inventoryRepository.findAll(pageable).map { it.toDto() }
     }

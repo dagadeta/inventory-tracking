@@ -17,7 +17,6 @@ class UsersController(
     private val usersRepository: UsersRepository
 ) {
     @GetMapping
-    // TODO use PagedModel
     fun getUsers(pageable: Pageable): Page<UserDto> {
         return usersRepository.findAll(pageable).map { it.toDto() }
     }
