@@ -18,7 +18,7 @@ curl --basic -u 'Default User:secret' "http://localhost:8080/api/inventory/items
 curl --basic -u 'Default User:secret' \
     -H "Content-Type: application/json" \
     -X POST \
-    -d '{"oldPassword":"secret","newPassword":"xyz"}' \
+    -d '{"currentPassword":"secret","newPassword":"xyz"}' \
     -i \
     "http://localhost:8080/api/change-password"
 ```

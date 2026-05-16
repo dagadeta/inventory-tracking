@@ -49,7 +49,7 @@ class PasswordChangeControllerTest {
         webMvc.post(changePasswordURL) {
             with(httpBasic("User", "password"))
             contentType = MediaType.APPLICATION_JSON
-            content = """{ "oldPassword": "password", "newPassword": "secret" }"""
+            content = """{ "currentPassword": "password", "newPassword": "secret" }"""
         }
             .andExpect { status { isOk() } }
 

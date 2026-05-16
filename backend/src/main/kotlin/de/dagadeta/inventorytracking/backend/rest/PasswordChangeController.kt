@@ -22,21 +22,20 @@ class PasswordChangeController(
 
     @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun changePassword(@RequestBody body: ChangePasswordDto): ResponseEntity<Unit> {
-        val loggedInUser = loginUtilityService.loggedInUser
-        val storedUser = usersRepository.findByName(loggedInUser?.name).first()
-
-        if (passwordEncoder.matches(body.oldPassword, loggedInUser?.password)) {
+        val loggedInUsername = loginUtilityService.loggedInUser?.username
+        val storedUser = usersRepository.findByName(loggedInUsername).first()
+        if (passwordEncoder.matches(body.currentPassword, storedUser.password)) {
             passwordEncoder.encode(body.newPassword)?.let {
                 storedUser.password = it
                 usersRepository.save(storedUser)
                 logger.info { "password changed" }
                 return ResponseEntity.ok().build()
             }
-            logger.info { "encoded new password for user $loggedInUser was null" }
+            logger.info { "encoded new password for user '$loggedInUsername' was null" }
         }
-        logger.info { "password hashes do not match for user $loggedInUser" }
+        logger.info { "password hashes do not match for user '$loggedInUsername'" }
         return ResponseEntity.badRequest().build()
     }
 }
 
-data class ChangePasswordDto(val oldPassword: String, val newPassword: String)
+data class ChangePasswordDto(val currentPassword: String, val newPassword: String)
