@@ -1,7 +1,6 @@
 package de.dagadeta.inventorytracking.backend.temp.demodata
 
 import de.dagadeta.inventorytracking.backend.persistance.*
-import de.dagadeta.inventorytracking.backend.persistance.UserRole.ADMIN
 import de.dagadeta.inventorytracking.backend.persistance.UserRole.USER
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.boot.context.event.ApplicationReadyEvent
@@ -20,11 +19,11 @@ class DemoDataCreator(
 
     @EventListener(ApplicationReadyEvent::class)
     fun createDemoData() {
-        if (usersRepository.count() > 0L) return
+        if (usersRepository.count() > 1L) return
 
-        log.info { "Creating demo data" }
-        usersRepository.save(InventoryUser(name = "Admin", password = encode("very secret"), role = ADMIN))
-        val user = usersRepository.save(InventoryUser(name = "Default User", password = encode("secret"), role = USER))
+        log.info { "Creating temporary demo data" }
+        val password = passwordEncoder.encode("secret")!!
+        val user = usersRepository.save(InventoryUser(name = "Default User", password = password, role = USER))
 
         val coolingPack = inventoryRepository.save(InventoryItem(name = "Cooling Pack", amount = 10))
         val walkingAid = inventoryRepository.save(InventoryItem(name = "Walking Aid", amount = 4))
@@ -32,6 +31,4 @@ class DemoDataCreator(
         inventoryLentRepository.save(InventoryItemLent(item = coolingPack, lentBy = user, lentTo = "Some Person"))
         inventoryLentRepository.save(InventoryItemLent(item = walkingAid, lentBy = user, lentTo = "Someone Else"))
     }
-
-    private fun encode(password: String) = passwordEncoder.encode(password) ?: error("Password should not be null!")
 }
