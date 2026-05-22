@@ -1,6 +1,6 @@
 [versions]
 flyway-plugin = "12.6.1"
-junit-jupiter = "6.0.3"
+junit-jupiter = "6.1.0"
 kotlin = "2.3.21"
 kover = "0.9.8"
 spring = "4.0.6"
