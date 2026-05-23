@@ -6,4 +6,6 @@ interface InventoryRepository : JpaRepository<InventoryItem, Long>
 
 interface InventoryLentRepository : JpaRepository<InventoryItemLent, Long>
 
-interface UsersRepository : JpaRepository<User, Long>
+interface UsersRepository : JpaRepository<InventoryUser, Long> {
+    fun findByName(name: String?): List<InventoryUser>
+}

@@ -1,21 +1,23 @@
 [versions]
 flyway-plugin = "12.6.1"
-junit-jupiter = "6.1.0"
 kotlin = "2.3.21"
+kotlin-logging = "8.0.02"
 kover = "0.9.8"
+mockito-kotlin = "6.3.0"
 spring = "4.0.6"
 spring-dependency-management = "1.1.7"
 zonky = "2.8.0"
 
 [libraries]
-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
+kotlin-logging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlin-logging" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-kotlin" }
 zonky = { module = "io.zonky.test:embedded-database-spring-test", version.ref = "zonky" }
 
 [plugins]
 flyway = { id = "org.flywaydb.flyway", version.ref = "flyway-plugin" }
-kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin"}
+kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin"}
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
-spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management"}
-springframework-boot = { id = "org.springframework.boot", version.ref = "spring"}
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
+springframework-boot = { id = "org.springframework.boot", version.ref = "spring" }

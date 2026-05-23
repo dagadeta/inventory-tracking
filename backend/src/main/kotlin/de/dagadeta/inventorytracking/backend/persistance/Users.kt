@@ -8,11 +8,12 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(schema = "inventory", name = "users")
-data class User(
+data class InventoryUser(
     @Id
     @GeneratedValue(strategy = IDENTITY)
     var id: Long = 0,
-    val username: String,
+    val name: String,
+    var password: String,
     val role: UserRole,
 )
 

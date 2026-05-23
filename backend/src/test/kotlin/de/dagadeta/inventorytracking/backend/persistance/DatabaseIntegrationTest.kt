@@ -4,9 +4,11 @@ import de.dagadeta.inventorytracking.backend.persistance.UserRole.ADMIN
 import de.dagadeta.inventorytracking.backend.persistance.UserRole.USER
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest
+import org.springframework.dao.DataIntegrityViolationException
 import java.time.LocalDateTime.now
 
 @DataJpaTest
@@ -31,13 +33,24 @@ class DatabaseIntegrationTest {
 
     @Test
     fun `a saved user can be read`() {
-        usersRepository.save(User(username = "Someone", role = ADMIN))
+        usersRepository.save(InventoryUser(name = "Someone", password = "", role = ADMIN))
 
         usersRepository.findAll().single().let {
             assertThat(it.id).isNotEqualTo(0)
-            assertThat(it.username).isEqualTo("Someone")
+            assertThat(it.name).isEqualTo("Someone")
             assertThat(it.role).isEqualTo(ADMIN)
         }
+    }
+
+    @Test
+    fun `user names must be unique`() {
+        usersRepository.save(InventoryUser(name = "Someone", password = "", role = USER))
+
+        assertThatThrownBy {
+            usersRepository.save(InventoryUser(name = "Someone", password = "", role = USER))
+        }.isInstanceOf(DataIntegrityViolationException::class.java)
+            .hasMessageContaining("duplicate key value violates unique constraint")
+            .hasMessageContaining("Detail: Key (name)=(Someone) already exists.")
     }
 
     @Test
@@ -54,7 +67,7 @@ class DatabaseIntegrationTest {
     @Test
     fun `a saved inventory item lent saves referenced objects, too`() {
         val startTime = now()
-        val user = User(username = "Someone else", role = USER)
+        val user = InventoryUser(name = "Someone else", password = "", role = USER)
         val item = InventoryItem(name = "Cooling pack", amount = 1)
 
         val savedUser = usersRepository.save(user)
