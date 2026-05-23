@@ -3,3 +3,4 @@ build/
 .kotlin/
 .idea/
 *.swp
+pgdata/
