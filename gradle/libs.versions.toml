@@ -1,7 +1,7 @@
 [versions]
 flyway-plugin = "12.6.1"
 kotlin = "2.3.21"
-kotlin-logging = "8.0.02"
+kotlin-logging = "8.0.4"
 kover = "0.9.8"
 mockito-kotlin = "6.3.0"
 spring = "4.0.6"
