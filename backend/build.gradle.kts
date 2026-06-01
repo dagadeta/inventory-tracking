@@ -21,6 +21,8 @@ repositories {
     mavenCentral()
 }
 
+val mockitoAgent by configurations.creating
+
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -29,6 +31,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("tools.jackson.module:jackson-module-kotlin")
     implementation(project(":common"))
+    implementation(libs.kotlin.logging)
 
     runtimeOnly("org.postgresql:postgresql")
 
@@ -42,6 +45,11 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 
     testImplementation(libs.zonky)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation("org.mockito:mockito-core")
+
+    mockitoAgent("org.mockito:mockito-core") { isTransitive = false }
+
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testRuntimeOnly("org.flywaydb:flyway-database-postgresql")
     testRuntimeOnly("org.springframework.boot:spring-boot-starter-flyway")
@@ -60,6 +68,9 @@ allOpen {
     annotation("jakarta.persistence.Embeddable")
 }
 
-tasks.named<Test>("test") {
-    useJUnitPlatform()
+tasks {
+    withType<Test> {
+        useJUnitPlatform()
+        jvmArgs.add("-javaagent:${mockitoAgent.asPath}")
+    }
 }

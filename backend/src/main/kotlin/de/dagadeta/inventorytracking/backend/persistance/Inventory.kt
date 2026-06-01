@@ -17,7 +17,7 @@ data class InventoryItemLent(
 
     @ManyToOne
     @JoinColumn
-    val lentBy: User,
+    val lentBy: InventoryUser,
     val lentTo: String,
     val timestamp: LocalDateTime = LocalDateTime.now(),
 )
