@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy.STATELESS
 import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 
 @Configuration
@@ -28,9 +30,21 @@ class SecurityConfiguration {
             }
             .httpBasic(Customizer.withDefaults())
             .csrf { it.disable() }
+            .cors(Customizer.withDefaults())
             .build()
     }
 
     @Bean
     fun getPasswordEncoder() = PasswordEncoderFactories.createDelegatingPasswordEncoder()
+
+    @Bean
+    fun corsConfigurationSource(): UrlBasedCorsConfigurationSource {
+        val configuration = CorsConfiguration()
+        configuration.allowedOrigins = listOf("http://localhost:8080", "http://localhost:8081")
+        configuration.allowedMethods = listOf("GET", "POST", "OPTIONS", "HEAD")
+        configuration.allowCredentials = true
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+        return source
+    }
 }

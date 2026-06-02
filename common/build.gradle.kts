@@ -1,21 +1,23 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    `java-library`
+    alias(libs.plugins.kotlinMultiplatform)
 }
 
-repositories {
-    mavenCentral()
-}
+kotlin {
+    jvm()
 
-dependencies {
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser()
     }
-}
 
-tasks.named<Test>("test") {
-    useJUnitPlatform()
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlinx.serialization.json)
+        }
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+        }
+    }
 }
