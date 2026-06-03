@@ -14,7 +14,7 @@ kotlin {
     }
 
     sourceSets {
-        commonMain.dependencies {
+        webMain.dependencies {
             implementation(projects.frontend.shared)
             implementation(libs.compose.ui)
         }

@@ -35,7 +35,7 @@ kotlin {
             implementation(libs.kotlin.test)
         }
         wasmJsMain.dependencies {
-            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.js)
         }
     }
 }

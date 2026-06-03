@@ -1,19 +1,28 @@
 package de.dagadeta.inventorytracking.frontend
 
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.auth.Auth
-import io.ktor.client.plugins.auth.providers.BasicAuthCredentials
-import io.ktor.client.plugins.auth.providers.basic
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.engine.cio.*
+import io.ktor.client.*
+import io.ktor.client.plugins.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
+import io.ktor.client.request.*
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 
-actual fun httpClient() = HttpClient(CIO) {
-    install(Auth) {
-        basic {
-            credentials {
-                BasicAuthCredentials("Admin", "very secret")
+actual fun httpClient() = HttpClient {
+    expectSuccess = false
+    install(ContentNegotiation) {
+        json(
+            Json {
+                ignoreUnknownKeys = true
+                prettyPrint = true
             }
-        }
+        )
     }
-    install(ContentNegotiation)
+    install(Logging) {
+        level = LogLevel.ALL
+        logger = Logger.SIMPLE
+    }
+    defaultRequest {
+        basicAuth("Admin", "very secret")
+    }
 }
