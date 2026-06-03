@@ -2,6 +2,7 @@ package de.dagadeta.inventorytracking.backend.rest
 
 import de.dagadeta.inventorytracking.backend.config.LoginUtilityService
 import de.dagadeta.inventorytracking.backend.persistance.UsersRepository
+import de.dagadeta.inventorytracking.common.model.ChangePasswordDto
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("/api/change-password")
+@RequestMapping(ChangePasswordDto.ENDPOINT)
 @RestController
 class PasswordChangeController(
     private val loginUtilityService: LoginUtilityService,
@@ -37,5 +38,3 @@ class PasswordChangeController(
         return ResponseEntity.badRequest().build()
     }
 }
-
-data class ChangePasswordDto(val currentPassword: String, val newPassword: String)

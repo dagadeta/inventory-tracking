@@ -1,5 +1,27 @@
 # inventory-tracking
 
+This project contains of
+
+* a backend service written in Kotlin using Spring Boot and
+* a Kotlin Multiplatform frontend using Web Assembly (Kotlin/WASM)
+
+## Local development
+
+### Start the Backend
+
+Run the main function in [App.kt](backend/src/main/kotlin/de/dagadeta/inventorytracking/backend/App.kt) or the Gradle
+task:
+
+```bash
+./gradlew backend:bootRun
+```
+
+### Start the Frontend
+
+```bash
+./gradlew frontend:webApp:wasmJsBrowserDevelopmentRun
+```
+
 ## List users with default password
 
 ```bash

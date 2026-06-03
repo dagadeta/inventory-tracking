@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("/api/inventory")
+@RequestMapping(InventoryItemDto.ENDPOINT)
 @RestController
 class InventoryController(
     private val inventoryRepository: InventoryRepository,
 ) {
-    @GetMapping("/items")
+    @GetMapping
     fun getInventoryItems(@PageableDefault(page = 0, size = 50) pageable: Pageable): Page<InventoryItemDto> {
         return inventoryRepository.findAll(pageable).map { it.toDto() }
     }

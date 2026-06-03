@@ -73,4 +73,7 @@ tasks {
         useJUnitPlatform()
         jvmArgs.add("-javaagent:${mockitoAgent.asPath}")
     }
+    named<JavaExec>("bootRun") {
+        workingDir = file(rootDir)
+    }
 }
