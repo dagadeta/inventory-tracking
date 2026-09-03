@@ -25,7 +25,7 @@ task:
 ## List users with default password
 
 ```bash
-curl --basic -u 'Default User:secret' "http://localhost:8080/api/users"
+curl --basic -u 'Admin:very secret' "http://localhost:8080/api/users"
 ```
 
 ## List inventory items with default password

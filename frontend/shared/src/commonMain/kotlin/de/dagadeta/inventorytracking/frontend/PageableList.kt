@@ -33,7 +33,7 @@ fun <T> PageableList(
 
             is ApiResult.Unprivileged -> {
                 items = emptyPage()
-                error = "You are not allowed to browse the inventory."
+                error = "You are not allowed to browse $header."
             }
         }
     }
