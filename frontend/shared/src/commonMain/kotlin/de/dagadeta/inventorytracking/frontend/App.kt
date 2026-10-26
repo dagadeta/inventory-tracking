@@ -34,16 +34,7 @@ fun App() {
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                PageableList(
-                    header = "Inventory",
-                    fetchItems = { api.fetchInventoryItems() },
-                    describeItem = { "${it.name}: ${it.amount}" }
-                )
-                PageableList(
-                    header = "Users",
-                    fetchItems = { api.fetchUsers() },
-                    describeItem = { "${it.name}: ${it.role}" }
-                )
+                MainAppNavigation(api)
             }
         }
     }
