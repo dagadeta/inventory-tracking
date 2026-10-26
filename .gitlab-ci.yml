@@ -39,6 +39,8 @@ build:
     - if: '$CI_PROJECT_PATH == "dagadeta-public/inventory-tracking"'
       when: always
     - when: never
+  before_script:
+    - apk add --no-cache nodejs npm yarn
   script:
     - ./gradlew build koverLog koverXmlReport
   coverage: '/application line coverage: \d+[.\d+]?%/'
