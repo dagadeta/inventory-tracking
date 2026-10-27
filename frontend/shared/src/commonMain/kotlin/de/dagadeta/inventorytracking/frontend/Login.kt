@@ -1,6 +1,7 @@
 package de.dagadeta.inventorytracking.frontend
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
@@ -46,6 +47,9 @@ fun Login(
                 keyboardType = PersonName,
                 imeAction = Next,
             ),
+            keyboardActions = KeyboardActions(
+                onDone = { onLoginClick(Credentials(userName, password)) },
+            ),
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -60,6 +64,9 @@ fun Login(
             keyboardOptions = KeyboardOptions(
                 keyboardType = Password,
                 imeAction = Done,
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { onLoginClick(Credentials(userName, password)) },
             ),
             modifier = Modifier.fillMaxWidth()
         )
