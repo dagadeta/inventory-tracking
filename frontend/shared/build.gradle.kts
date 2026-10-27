@@ -10,8 +10,9 @@ kotlin {
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         browser()
+        binaries.executable()
     }
-    
+
     sourceSets {
         commonMain.dependencies {
             api(projects.common)
