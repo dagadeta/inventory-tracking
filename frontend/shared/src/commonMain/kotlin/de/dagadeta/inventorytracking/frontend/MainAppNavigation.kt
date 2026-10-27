@@ -1,33 +1,61 @@
 package de.dagadeta.inventorytracking.frontend
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.*
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
 import de.dagadeta.inventorytracking.frontend.http.API
 import inventory_tracking.frontend.shared.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 
+private data class NavItem(
+    val name: String,
+    val selectedIcon: Painter,
+    val unselectedIcon: Painter,
+    val content: @Composable (ColumnScope.() -> Unit)
+)
+
 @Composable
 fun MainAppNavigation(
     api: API,
     modifier: Modifier = Modifier,
 ) {
-    var selectedItem by rememberSaveable { mutableIntStateOf(0) }
+    val items = listOf(
+        NavItem(
+            name = "Inventory",
+            selectedIcon = painterResource(Res.drawable.view_list_filled),
+            unselectedIcon = painterResource(Res.drawable.view_list),
+            content = {
+                PageableList(
+                    header = "Inventory",
+                    fetchItems = { api.fetchInventoryItems() },
+                    describeItem = { "${it.name}: ${it.amount}" }
+                )
+            }
+        ),
+        NavItem(
+            name = "Users",
+            selectedIcon = painterResource(Res.drawable.group_filled),
+            unselectedIcon = painterResource(Res.drawable.group),
+            content = {
+                PageableList(
+                    header = "Users",
+                    fetchItems = { api.fetchUsers() },
+                    describeItem = { "${it.name}: ${it.role}" }
+                )
+            }
+        ),
+    )
 
-    val items = listOf("Inventory", "Users")
-    val selectedIcons = listOf(painterResource(Res.drawable.view_list_filled), painterResource(Res.drawable.group_filled))
-    val unselectedIcons = listOf(painterResource(Res.drawable.view_list), painterResource(Res.drawable.group))
+    var selectedItem by rememberSaveable { mutableStateOf(items.first()) }
 
     val state = rememberWideNavigationRailState()
     val scope = rememberCoroutineScope()
@@ -76,45 +104,29 @@ fun MainAppNavigation(
                 }
             },
         ) {
-            items.forEachIndexed { index, item ->
+            items.forEach { item ->
                 WideNavigationRailItem(
                     railExpanded = state.targetValue == WideNavigationRailValue.Expanded,
                     icon = {
                         val painter =
-                            if (selectedItem == index) {
-                                selectedIcons[index]
+                            if (selectedItem == item) {
+                                item.selectedIcon
                             } else {
-                                unselectedIcons[index]
+                                item.unselectedIcon
                             }
                         Icon(painter = painter, contentDescription = null)
                     },
-                    label = { Text(item) },
-                    selected = selectedItem == index,
-                    onClick = { selectedItem = index },
+                    label = { Text(item.name) },
+                    selected = selectedItem == item,
+                    onClick = { selectedItem = item },
                 )
             }
         }
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-        ) {
-            when(selectedItem) {
-                0 -> {
-                    PageableList(
-                        header = "Inventory",
-                        fetchItems = { api.fetchInventoryItems() },
-                        describeItem = { "${it.name}: ${it.amount}" }
-                    )
-                }
-                1 -> {
-                    PageableList(
-                        header = "Users",
-                        fetchItems = { api.fetchUsers() },
-                        describeItem = { "${it.name}: ${it.role}" }
-                    )
-                }
-            }
-        }
+                .verticalScroll(rememberScrollState()),
+            content = selectedItem.content
+        )
     }
 }
