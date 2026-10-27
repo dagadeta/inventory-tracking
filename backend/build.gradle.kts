@@ -21,7 +21,7 @@ repositories {
     mavenCentral()
 }
 
-val mockitoAgent by configurations.creating
+val mockitoAgent = configurations.create("mockitoAgent")
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
