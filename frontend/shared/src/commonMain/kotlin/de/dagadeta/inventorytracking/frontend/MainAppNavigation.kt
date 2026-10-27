@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
+import androidx.compose.material3.WideNavigationRailValue.Expanded
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
@@ -59,12 +60,7 @@ fun MainAppNavigation(
 
     val state = rememberWideNavigationRailState()
     val scope = rememberCoroutineScope()
-    val headerDescription =
-        if (state.targetValue == WideNavigationRailValue.Expanded) {
-            "Collapse rail"
-        } else {
-            "Expand rail"
-        }
+    val headerDescription = if (state.targetValue == Expanded) "Collapse rail" else "Expand rail"
 
     Row(
         modifier = modifier.fillMaxWidth()
@@ -75,22 +71,15 @@ fun MainAppNavigation(
                 IconButton(
                     modifier =
                         Modifier.padding(start = 24.dp).semantics {
-                            stateDescription =
-                                if (state.currentValue == WideNavigationRailValue.Expanded) {
-                                    "Expanded"
-                                } else {
-                                    "Collapsed"
-                                }
+                            stateDescription = if (state.currentValue == Expanded) "Expanded" else "Collapsed"
                         },
                     onClick = {
                         scope.launch {
-                            if (state.targetValue == WideNavigationRailValue.Expanded)
-                                state.collapse()
-                            else state.expand()
+                            if (state.targetValue == Expanded) state.collapse() else state.expand()
                         }
                     },
                 ) {
-                    if (state.targetValue == WideNavigationRailValue.Expanded) {
+                    if (state.targetValue == Expanded) {
                         Icon(
                             painter = painterResource(Res.drawable.menu_open),
                             contentDescription = headerDescription
@@ -106,14 +95,9 @@ fun MainAppNavigation(
         ) {
             items.forEach { item ->
                 WideNavigationRailItem(
-                    railExpanded = state.targetValue == WideNavigationRailValue.Expanded,
+                    railExpanded = state.targetValue == Expanded,
                     icon = {
-                        val painter =
-                            if (selectedItem == item) {
-                                item.selectedIcon
-                            } else {
-                                item.unselectedIcon
-                            }
+                        val painter = if (selectedItem == item) item.selectedIcon else item.unselectedIcon
                         Icon(painter = painter, contentDescription = null)
                     },
                     label = { Text(item.name) },
