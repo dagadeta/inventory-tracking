@@ -49,7 +49,10 @@ dependencies {
   testRuntimeOnly("org.springframework.boot:spring-boot-starter-flyway")
 }
 
-kotlin { compilerOptions { freeCompilerArgs.addAll("-Xjsr305=strict") } }
+kotlin {
+  jvmToolchain(25)
+  compilerOptions { freeCompilerArgs.addAll("-Xjsr305=strict") }
+}
 
 allOpen {
   annotation("jakarta.persistence.Entity")
