@@ -16,3 +16,5 @@ kotlin {
     commonTest.dependencies { implementation(libs.kotlin.test) }
   }
 }
+
+kotlin { jvmToolchain(25) }
