@@ -29,4 +29,16 @@ dependencyResolutionManagement {
     }
 }
 
-include(":backend", ":frontend:shared", ":frontend:webApp", ":common")
+plugins {
+    // this aggregates coverage reports for the subprojects but has no koverLog task
+    // id("org.jetbrains.kotlinx.kover.aggregation") version "0.9.11"
+}
+
+include(":backend", ":frontend:shared", ":frontend:webApp", ":frontend:desktopApp", ":common")
+
+//kover {
+//    enableCoverage()
+//    reports {
+//        excludedClasses.add("inventory_tracking.frontend.shared.generated.resources.*")
+//    }
+//}
