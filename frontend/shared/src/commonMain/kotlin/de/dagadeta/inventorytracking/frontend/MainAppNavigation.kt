@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
@@ -16,6 +17,10 @@ import de.dagadeta.inventorytracking.frontend.http.API
 import inventory_tracking.frontend.shared.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+
+const val expandButtonTag = "expand-button"
+const val inventoryListTag = "inventory-list"
+const val usersListTag = "users-list"
 
 private data class NavItem(
     val name: String,
@@ -38,7 +43,8 @@ fun MainAppNavigation(
                 PageableList(
                     header = "Inventory",
                     fetchItems = { api.fetchInventoryItems() },
-                    describeItem = { "${it.name}: ${it.amount}" }
+                    describeItem = { "${it.name}: ${it.amount}" },
+                    modifier = Modifier.testTag(inventoryListTag),
                 )
             }
         ),
@@ -50,7 +56,8 @@ fun MainAppNavigation(
                 PageableList(
                     header = "Users",
                     fetchItems = { api.fetchUsers() },
-                    describeItem = { "${it.name}: ${it.role}" }
+                    describeItem = { "${it.name}: ${it.role}" },
+                    modifier = Modifier.testTag(usersListTag),
                 )
             }
         ),
@@ -70,7 +77,7 @@ fun MainAppNavigation(
             header = {
                 IconButton(
                     modifier =
-                        Modifier.padding(start = 24.dp).semantics {
+                        Modifier.testTag(expandButtonTag).padding(start = 24.dp).semantics {
                             stateDescription = if (state.currentValue == Expanded) "Expanded" else "Collapsed"
                         },
                     onClick = {
@@ -103,6 +110,7 @@ fun MainAppNavigation(
                     label = { Text(item.name) },
                     selected = selectedItem == item,
                     onClick = { selectedItem = item },
+                    modifier = Modifier.testTag("navigate-to-${item.name}"),
                 )
             }
         }

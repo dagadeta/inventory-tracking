@@ -5,14 +5,19 @@ import de.dagadeta.inventorytracking.common.model.PageDto
 import de.dagadeta.inventorytracking.common.model.UserDto
 import io.ktor.client.request.*
 
-class API(credentials: Credentials) {
+interface API {
+    suspend fun fetchInventoryItems(): ApiResult<PageDto<InventoryItemDto>>
+    suspend fun fetchUsers(): ApiResult<PageDto<UserDto>>
+}
+
+class HttpAPI(credentials: Credentials) : API {
     private val client = httpClient(credentials)
 
-    suspend fun fetchInventoryItems(): ApiResult<PageDto<InventoryItemDto>> = safeApiCall {
+    override suspend fun fetchInventoryItems(): ApiResult<PageDto<InventoryItemDto>> = safeApiCall {
         client.get("http://localhost:8080${InventoryItemDto.ENDPOINT}")
     }
 
-    suspend fun fetchUsers(): ApiResult<PageDto<UserDto>> = safeApiCall {
+    override suspend fun fetchUsers(): ApiResult<PageDto<UserDto>> = safeApiCall {
         client.get("http://localhost:8080${UserDto.ENDPOINT}")
     }
 }
