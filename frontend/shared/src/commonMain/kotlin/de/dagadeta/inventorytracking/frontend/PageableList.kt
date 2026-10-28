@@ -4,10 +4,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import de.dagadeta.inventorytracking.common.model.PageDto
 import de.dagadeta.inventorytracking.common.model.PageDto.Companion.emptyPage
 import de.dagadeta.inventorytracking.frontend.http.ApiResult
+
+const val listColumnTag = "pageable-list-column"
 
 @Composable
 fun <T> PageableList(
@@ -38,7 +41,7 @@ fun <T> PageableList(
         }
     }
     Column(
-        modifier = modifier,
+        modifier = modifier.testTag(listColumnTag),
     ) {
         Text(header, fontWeight = Bold)
 
