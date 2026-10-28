@@ -9,7 +9,13 @@ plugins {
 kotlin {
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        browser()
+        browser {
+            testTask {
+                useKarma {
+                    useChromiumHeadless()
+                }
+            }
+        }
         binaries.executable()
     }
 
@@ -34,6 +40,7 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.compose.ui.test)
         }
         wasmJsMain.dependencies {
             implementation(libs.ktor.client.js)
