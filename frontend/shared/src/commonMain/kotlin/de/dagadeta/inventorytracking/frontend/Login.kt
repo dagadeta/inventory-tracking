@@ -8,6 +8,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction.Companion.Done
 import androidx.compose.ui.text.input.ImeAction.Companion.Next
@@ -18,10 +19,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.dagadeta.inventorytracking.frontend.http.Credentials
+import de.dagadeta.inventorytracking.frontend.http.Credentials.InputCredentials
+import de.dagadeta.inventorytracking.frontend.http.Credentials.WrongCredentials
 
 @Composable
 fun Login(
-    onLoginClick: (Credentials) -> Unit
+    onLoginClick: (InputCredentials) -> Unit,
+    credentials: Credentials,
 ) {
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -48,7 +52,7 @@ fun Login(
                 imeAction = Next,
             ),
             keyboardActions = KeyboardActions(
-                onDone = { onLoginClick(Credentials(userName, password)) },
+                onDone = { onLoginClick(InputCredentials(userName, password)) },
             ),
             modifier = Modifier.fillMaxWidth()
         )
@@ -66,7 +70,7 @@ fun Login(
                 imeAction = Done,
             ),
             keyboardActions = KeyboardActions(
-                onDone = { onLoginClick(Credentials(userName, password)) },
+                onDone = { onLoginClick(InputCredentials(userName, password)) },
             ),
             modifier = Modifier.fillMaxWidth()
         )
@@ -74,10 +78,19 @@ fun Login(
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(
-            onClick = { onLoginClick(Credentials(userName, password)) },
+            onClick = { onLoginClick(InputCredentials(userName, password)) },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Log in")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        if (credentials is WrongCredentials) {
+            Text(
+                text = credentials.message,
+                color = Color.Red,
+            )
         }
     }
 }
