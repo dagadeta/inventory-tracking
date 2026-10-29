@@ -23,6 +23,6 @@ class UsersController(
     }
 }
 
-fun InventoryUser.toDto() = UserDto(id, name, role.toDto())
+private fun InventoryUser.toDto() = UserDto(id, name, role.toDto())
 
 fun UserRole.toDto() = UserRoleDto.valueOf(name)
