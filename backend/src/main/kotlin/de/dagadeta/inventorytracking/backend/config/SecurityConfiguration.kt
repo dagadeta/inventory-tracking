@@ -1,6 +1,7 @@
 package de.dagadeta.inventorytracking.backend.config
 
 import de.dagadeta.inventorytracking.backend.persistance.UserRole.ADMIN
+import de.dagadeta.inventorytracking.common.model.UserDto
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -24,7 +25,7 @@ class SecurityConfiguration {
         return http
             .securityMatcher("/api/**")
             .authorizeHttpRequests { request ->
-                request.requestMatchers("/api/users/**").hasRole(ADMIN.name)
+                request.requestMatchers("${UserDto.ENDPOINT}/**").hasRole(ADMIN.name)
                 request.anyRequest().authenticated()
             }
             .sessionManagement { session ->
