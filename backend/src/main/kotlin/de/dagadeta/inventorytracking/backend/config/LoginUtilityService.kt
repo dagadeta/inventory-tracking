@@ -3,7 +3,6 @@ package de.dagadeta.inventorytracking.backend.config
 import de.dagadeta.inventorytracking.backend.persistance.UsersRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.transaction.Transactional
-import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.User
@@ -31,11 +30,5 @@ class LoginUtilityService(
     }
 
     val loggedInUser: UserDetails?
-        get() {
-            val authentication: Authentication? = SecurityContextHolder.getContext().authentication
-            if (authentication == null || authentication.principal == null) {
-                return null
-            }
-            return (authentication.principal as UserDetails)
-        }
+        get() = SecurityContextHolder.getContext().authentication?.principal as UserDetails?
 }
