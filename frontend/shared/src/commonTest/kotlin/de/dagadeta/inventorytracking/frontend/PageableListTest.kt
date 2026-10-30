@@ -7,8 +7,8 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.v2.runComposeUiTest
 import de.dagadeta.inventorytracking.common.model.InventoryItemDto
 import de.dagadeta.inventorytracking.common.model.PageDto
-import de.dagadeta.inventorytracking.frontend.fixture.fakeAPI
 import de.dagadeta.inventorytracking.frontend.http.ApiResult
+import de.dagadeta.inventorytracking.frontend.http.fakeAPI
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)

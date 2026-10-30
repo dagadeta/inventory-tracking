@@ -7,7 +7,7 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
-import de.dagadeta.inventorytracking.frontend.fixture.fakeAPI
+import de.dagadeta.inventorytracking.frontend.http.fakeAPI
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
