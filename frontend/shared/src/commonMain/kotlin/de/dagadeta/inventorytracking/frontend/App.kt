@@ -31,9 +31,9 @@ fun App() {
                     MainScope().launch {
                         val api = HttpAPI(it)
                         credentials = when (val info = api.fetchUserInfo()) {
-                            is Error -> WrongCredentials(info.message)
+                            is Error -> WrongCredentials(it, info.message)
                             is Success<UserInfoDto> -> info.toCredentials(it)
-                            Unprivileged -> WrongCredentials("Invalid user name or password.")
+                            Unprivileged -> WrongCredentials(it, "Invalid user name or password.")
                         }
                     }
                 }
