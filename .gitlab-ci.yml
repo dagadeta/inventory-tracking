@@ -40,7 +40,7 @@ build:
       when: always
     - when: never
   before_script:
-    - apk add --no-cache nodejs npm yarn
+    - apk add --no-cache nodejs npm yarn chromium
   script:
     - ./gradlew build koverLog koverXmlReport
   coverage: '/application line coverage: \d+[.\d+]?%/'
@@ -50,10 +50,10 @@ build:
       - build/reports
       - app/build/reports
     reports:
-      junit: "*/build/test-results/**/TEST-*.xml"
+      junit: "**/build/test-results/**/TEST-*.xml"
       coverage_report:
         coverage_format: jacoco
-        path: "*/build/reports/kover/report.xml"
+        path: "**/build/reports/kover/report.xml"
     expire_in: 1 week
 
 sast:

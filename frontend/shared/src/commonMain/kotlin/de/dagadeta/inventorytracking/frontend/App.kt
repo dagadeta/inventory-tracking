@@ -9,8 +9,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import de.dagadeta.inventorytracking.frontend.http.API
 import de.dagadeta.inventorytracking.frontend.http.Credentials
+import de.dagadeta.inventorytracking.frontend.http.HttpAPI
 
 @Composable
 @Preview
@@ -26,7 +26,7 @@ fun App() {
             )
         } else {
             // TODO don't create a new instance on each recompose
-            val api = API(credentials)
+            val api = HttpAPI(credentials)
             Column(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.primaryContainer)
@@ -34,16 +34,7 @@ fun App() {
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                PageableList(
-                    header = "Inventory",
-                    fetchItems = { api.fetchInventoryItems() },
-                    describeItem = { "${it.name}: ${it.amount}" }
-                )
-                PageableList(
-                    header = "Users",
-                    fetchItems = { api.fetchUsers() },
-                    describeItem = { "${it.name}: ${it.role}" }
-                )
+                MainAppNavigation(api)
             }
         }
     }
