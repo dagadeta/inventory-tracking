@@ -31,7 +31,3 @@ compose.desktop {
 tasks.withType<ComposeHotRun>().configureEach {
     jvmArgs = jvmArgs + "--enable-native-access=ALL-UNNAMED"
 }
-
-kotlin {
-    jvmToolchain(21)
-}
