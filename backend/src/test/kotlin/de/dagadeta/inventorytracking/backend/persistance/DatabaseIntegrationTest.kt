@@ -67,6 +67,22 @@ class DatabaseIntegrationTest {
     }
 
     @Test
+    fun `inventoryLent items can be counted by itemId`() {
+        val user = InventoryUser(name = "Someone else", password = "", role = USER)
+        val item = InventoryItem(name = "Cooling pack", amount = 1)
+        val otherItem = InventoryItem(name = "Something else", amount = 42)
+
+        val savedUser = usersRepository.save(user)
+        val savedItem = inventoryRepository.save(item)
+        val savedOtherItem = inventoryRepository.save(otherItem)
+        val lent = InventoryItemLent(item = savedItem, lentBy = savedUser, lentTo = "Freddie Mercury")
+        inventoryLentRepository.save(lent)
+
+        assertThat(inventoryLentRepository.countByItem(savedItem)).isEqualTo(1)
+        assertThat(inventoryLentRepository.countByItem(savedOtherItem)).isEqualTo(0)
+    }
+
+    @Test
     fun `a saved inventory item lent needs referenced objects to be saved before`() {
         val startTime = now()
         val user = InventoryUser(name = "Someone else", password = "", role = USER)

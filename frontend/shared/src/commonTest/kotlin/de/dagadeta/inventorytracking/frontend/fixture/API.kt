@@ -11,7 +11,7 @@ import de.dagadeta.inventorytracking.frontend.http.ApiResult.Success
 
 val fakeAPI: API = object : API {
     override suspend fun fetchInventoryItems(): ApiResult<PageDto<InventoryItemDto>> =
-        Success(pageOf(InventoryItemDto(1, "item-1", 1)))
+        Success(pageOf(InventoryItemDto(1, "item-1", 1, 0, 1)))
 
     override suspend fun fetchUsers(): ApiResult<PageDto<UserDto>> =
         Success(pageOf(UserDto(1, "admin", ADMIN)))

@@ -43,7 +43,7 @@ fun MainAppNavigation(
                 PageableList(
                     header = "Inventory",
                     fetchItems = { api.fetchInventoryItems() },
-                    describeItem = { "${it.name}: ${it.amount}" },
+                    describeItem = { "${it.name} - total: ${it.totalAmount}, lent: ${it.lentAmount}, remaining: ${it.remainingAmount}" },
                     modifier = Modifier.testTag(inventoryListTag),
                 )
             }

@@ -34,20 +34,19 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("org.junit.jupiter:junit-jupiter-params")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
     testImplementation("org.springframework.boot:spring-boot-starter-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 
     testImplementation(libs.zonky)
     testImplementation(libs.mockito.kotlin)
-    testImplementation("org.mockito:mockito-core")
 
     mockitoAgent("org.mockito:mockito-core") { isTransitive = false }
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testRuntimeOnly("org.flywaydb:flyway-database-postgresql")
     testRuntimeOnly("org.springframework.boot:spring-boot-starter-flyway")
-    testRuntimeOnly("org.postgresql:postgresql")
 }
 
 kotlin {

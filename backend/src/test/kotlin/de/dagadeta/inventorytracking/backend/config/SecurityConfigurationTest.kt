@@ -1,6 +1,6 @@
 package de.dagadeta.inventorytracking.backend.config
 
-import de.dagadeta.inventorytracking.backend.persistance.InventoryRepository
+import de.dagadeta.inventorytracking.backend.domain.InventoryService
 import de.dagadeta.inventorytracking.backend.persistance.InventoryUser
 import de.dagadeta.inventorytracking.backend.persistance.UserRole.ADMIN
 import de.dagadeta.inventorytracking.backend.persistance.UserRole.USER
@@ -33,7 +33,7 @@ class SecurityConfigurationTest {
     private lateinit var usersRepository: UsersRepository
 
     @MockitoBean
-    private lateinit var inventoryRepository: InventoryRepository
+    private lateinit var inventoryService: InventoryService
 
     @Autowired
     private lateinit var webMvc: MockMvc
@@ -60,8 +60,8 @@ class SecurityConfigurationTest {
                 InventoryUser(1L, "User", "{noop}password", USER)
             )
         }
-        inventoryRepository.stub {
-            on { findAll(any(Pageable::class.java)) } doReturn Page.empty()
+        inventoryService.stub {
+            on { allInventoryItemAmounts(Pageable.ofSize(50)) } doReturn Page.empty()
         }
         webMvc.get(inventoryURL) { with(httpBasic("User", "password")) }
             .andExpect { status { isOk() } }
