@@ -13,7 +13,11 @@ kotlin {
         browser {
             testTask {
                 useKarma {
-                    useChromiumHeadless()
+                    if (isCiEnvironment) {
+                        useChromeHeadlessNoSandbox()
+                    } else {
+                        useChromiumHeadless()
+                    }
                 }
             }
         }
@@ -56,3 +60,5 @@ kotlin {
         }
     }
 }
+
+val isCiEnvironment = providers.environmentVariable("CI").isPresent
