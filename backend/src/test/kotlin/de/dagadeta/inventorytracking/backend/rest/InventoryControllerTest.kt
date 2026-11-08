@@ -1,7 +1,7 @@
 package de.dagadeta.inventorytracking.backend.rest
 
-import de.dagadeta.inventorytracking.backend.persistance.InventoryItem
-import de.dagadeta.inventorytracking.backend.persistance.InventoryRepository
+import de.dagadeta.inventorytracking.backend.domain.InventoryService
+import de.dagadeta.inventorytracking.backend.domain.model.InventoryItemAmounts
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.get
 class InventoryControllerTest {
 
     @MockitoBean
-    private lateinit var inventoryRepository: InventoryRepository
+    private lateinit var inventoryService: InventoryService
 
     @Autowired
     private lateinit var webMvc: MockMvc
@@ -31,7 +31,7 @@ class InventoryControllerTest {
 
     @Test
     fun `an empty inventory returns an empty page`() {
-        inventoryRepository.stub { on { findAll(any<Pageable>()) } doReturn empty() }
+        inventoryService.stub { on { allInventoryItemAmounts(any<Pageable>()) } doReturn empty() }
 
         webMvc.get(inventoryURL)
             .andExpect { status { isOk() } }
@@ -39,12 +39,12 @@ class InventoryControllerTest {
     }
 
     @Test
-    fun `available inventory items are listed`() {
-        inventoryRepository.stub {
-            on { findAll(any<Pageable>()) } doReturn PageImpl(
+    fun `all inventory items are listed`() {
+        inventoryService.stub {
+            on { allInventoryItemAmounts(any<Pageable>()) } doReturn PageImpl(
                 listOf(
-                    InventoryItem(1L, "Hammer", 1),
-                    InventoryItem(2L, "Nail", 10),
+                    InventoryItemAmounts(1L, "Hammer", 1),
+                    InventoryItemAmounts(2L, "Nail", 10),
                 )
             )
         }
@@ -56,8 +56,8 @@ class InventoryControllerTest {
                     json(
                         """{
                         |   "content":[
-                        |       {"id":1,"name":"Hammer","amount":1},
-                        |       {"id":2,"name":"Nail","amount":10}
+                        |       {"id":1,"name":"Hammer","totalAmount":1,"lentAmount":0,"remainingAmount":1},
+                        |       {"id":2,"name":"Nail","totalAmount":10,"lentAmount":0,"remainingAmount":10}
                         |   ],
                         |   "page":{"size":2,"number":0,"totalElements":2,"totalPages":1}
                         |}""".trimMargin()
@@ -68,19 +68,19 @@ class InventoryControllerTest {
 
     @Test
     fun `inventory items get paged according to the request`() {
-        inventoryRepository.stub {
-            on { findAll(PageRequest.of(0, 2)) } doReturn PageImpl(
+        inventoryService.stub {
+            on { allInventoryItemAmounts(PageRequest.of(0, 2)) } doReturn PageImpl(
                 listOf(
-                    InventoryItem(1L, "1", 1),
-                    InventoryItem(2L, "2", 2),
+                    InventoryItemAmounts(1L, "1", 1),
+                    InventoryItemAmounts(2L, "2", 2),
                 ),
                 PageRequest.of(0, 2),
                 4,
             )
-            on { findAll(PageRequest.of(1, 2)) } doReturn PageImpl(
+            on { allInventoryItemAmounts(PageRequest.of(1, 2)) } doReturn PageImpl(
                 listOf(
-                    InventoryItem(3L, "3", 3),
-                    InventoryItem(4L, "4", 4),
+                    InventoryItemAmounts(3L, "3", 3),
+                    InventoryItemAmounts(4L, "4", 4),
                 ),
                 PageRequest.of(1, 2),
                 4,
@@ -94,8 +94,8 @@ class InventoryControllerTest {
                     json(
                         """{
                         |   "content":[
-                        |       {"id":1,"name":"1","amount":1},
-                        |       {"id":2,"name":"2","amount":2}
+                        |       {"id":1,"name":"1","totalAmount":1,"lentAmount":0,"remainingAmount":1},
+                        |       {"id":2,"name":"2","totalAmount":2,"lentAmount":0,"remainingAmount":2}
                         |   ],
                         |   "page":{"size":2,"number":0,"totalElements":4,"totalPages":2}
                         |}""".trimMargin()
@@ -109,8 +109,8 @@ class InventoryControllerTest {
                     json(
                         """{
                         |   "content":[
-                        |       {"id":3,"name":"3","amount":3},
-                        |       {"id":4,"name":"4","amount":4}
+                        |       {"id":3,"name":"3","totalAmount":3,"lentAmount":0,"remainingAmount":3},
+                        |       {"id":4,"name":"4","totalAmount":4,"lentAmount":0,"remainingAmount":4}
                         |   ],
                         |   "page":{"size":2,"number":1,"totalElements":4,"totalPages":2}
                         |}""".trimMargin()
@@ -121,10 +121,10 @@ class InventoryControllerTest {
 
     @Test
     fun `huge amount of data gets paged automatically using a default page size of 50`() {
-        inventoryRepository.stub {
-            on { findAll(PageRequest.of(0, 50)) } doReturn PageImpl(
+        inventoryService.stub {
+            on { allInventoryItemAmounts(PageRequest.of(0, 50)) } doReturn PageImpl(
                 List(50) {
-                    InventoryItem(it.toLong(), "$it", it)
+                    InventoryItemAmounts(it.toLong(), "$it", it)
                 },
                 PageRequest.of(0, 50),
                 150,
@@ -148,6 +148,6 @@ class InventoryControllerTest {
     }
 
     private fun fiftyInventoryItemsJson() = List(50) {
-        """{"id":$it,"name":"$it","amount":$it}"""
+        """{"id":$it,"name":"$it","totalAmount":$it,"lentAmount":0,"remainingAmount":$it}"""
     }.joinToString(",")
 }

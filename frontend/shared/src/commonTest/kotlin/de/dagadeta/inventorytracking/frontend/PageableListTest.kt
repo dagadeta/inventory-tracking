@@ -22,7 +22,7 @@ class PageableListTest {
                 fetchItems = {
                     fakeAPI.fetchInventoryItems()
                 },
-                describeItem = { "${it.name}: ${it.amount}" },
+                describeItem = { "${it.name}: ${it.totalAmount}" },
             )
         }
 
@@ -39,7 +39,7 @@ class PageableListTest {
                 fetchItems = {
                     ApiResult.Error("error message", 42) as ApiResult<PageDto<InventoryItemDto>>
                 },
-                describeItem = { "${it.name}: ${it.amount}" },
+                describeItem = { "${it.name}: ${it.totalAmount}" },
             )
         }
 
