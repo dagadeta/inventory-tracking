@@ -11,6 +11,13 @@ data class UserDto(val id: Long, val name: String, val role: UserRoleDto) {
 }
 
 @Serializable
+data class UserInfoDto(val id: Long, val name: String, val role: UserRoleDto) {
+    companion object {
+        const val ENDPOINT = "/api/user-info"
+    }
+}
+
+@Serializable
 enum class UserRoleDto {
     ADMIN, USER
 }

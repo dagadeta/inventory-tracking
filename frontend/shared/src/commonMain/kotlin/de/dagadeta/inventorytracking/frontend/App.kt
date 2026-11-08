@@ -9,24 +9,42 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import de.dagadeta.inventorytracking.frontend.http.Credentials
-import de.dagadeta.inventorytracking.frontend.http.HttpAPI
+import de.dagadeta.inventorytracking.common.model.UserInfoDto
+import de.dagadeta.inventorytracking.frontend.http.*
+import de.dagadeta.inventorytracking.frontend.http.ApiResult.*
+import de.dagadeta.inventorytracking.frontend.http.Credentials.*
+import kotlinx.coroutines.launch
+
+@Composable
+fun App() = ConnectedApp(HttpAPI())
 
 @Composable
 @Preview
-fun App() {
-    MaterialTheme {
-        var credentials by remember { mutableStateOf(Credentials.EMPTY) }
+fun PreviewApp() = ConnectedApp(fakeAPI)
 
-        if (credentials.isIncomplete()) {
+@Composable
+fun ConnectedApp(
+    api: API,
+) {
+    val coroutineScope = rememberCoroutineScope()
+
+    MaterialTheme {
+        var credentials by remember { mutableStateOf<Credentials>(NoCredentials) }
+
+        if (credentials !is UserInfo) {
             Login(
+                credentials = credentials,
                 onLoginClick = {
-                    credentials = it
+                    coroutineScope.launch {
+                        credentials = when (val info = api.login(it)) {
+                            is Error -> WrongCredentials(it, info.message)
+                            is Success<UserInfoDto> -> info.toCredentials(it)
+                            Unprivileged -> WrongCredentials(it, "Invalid user name or password.")
+                        }
+                    }
                 }
             )
         } else {
-            // TODO don't create a new instance on each recompose
-            val api = HttpAPI(credentials)
             Column(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.primaryContainer)
