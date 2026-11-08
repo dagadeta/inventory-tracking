@@ -61,10 +61,21 @@ allOpen {
     annotation("jakarta.persistence.Embeddable")
 }
 
+abstract class MockitoAgentProvider : CommandLineArgumentProvider {
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val agentJar: ConfigurableFileCollection
+
+    override fun asArguments(): Iterable<String> =
+        listOf("-javaagent:${agentJar.asPath}")
+}
+
 tasks {
     withType<Test> {
         useJUnitPlatform()
-        jvmArgs.add("-javaagent:${mockitoAgent.asPath}")
+        jvmArgumentProviders.add(objects.newInstance<MockitoAgentProvider>().apply {
+            agentJar.from(mockitoAgent)
+        })
     }
     named<JavaExec>("bootRun") {
         workingDir = file(rootDir)
