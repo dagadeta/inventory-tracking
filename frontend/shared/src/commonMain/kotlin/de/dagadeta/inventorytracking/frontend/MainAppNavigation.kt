@@ -21,6 +21,7 @@ import org.jetbrains.compose.resources.painterResource
 const val expandButtonTag = "expand-button"
 const val inventoryListTag = "inventory-list"
 const val usersListTag = "users-list"
+const val userAccountTag = "user-account"
 
 private data class NavItem(
     val name: String,
@@ -64,6 +65,18 @@ fun MainAppNavigation(
                 )
               },
           ),
+          NavItem(
+              name = "Account",
+              selectedIcon = painterResource(Res.drawable.account_filled),
+              unselectedIcon = painterResource(Res.drawable.account),
+              content = {
+                UserAccount(
+                    loadUserInfo = { api.fetchUserInfo() },
+                    changePassword = { current, new -> api.changePassword(current, new) },
+                    modifier = Modifier.testTag(userAccountTag),
+                )
+              },
+          ),
       )
 
   var selectedItem by rememberSaveable { mutableStateOf(items.first()) }
@@ -72,9 +85,7 @@ fun MainAppNavigation(
   val scope = rememberCoroutineScope()
   val headerDescription = if (state.targetValue == Expanded) "Collapse rail" else "Expand rail"
 
-  Row(
-      modifier = modifier.fillMaxWidth(),
-  ) {
+  Row(modifier = modifier.fillMaxWidth()) {
     WideNavigationRail(
         state = state,
         header = {

@@ -20,6 +20,7 @@ sealed interface Credentials {
 enum class UserRole {
   ADMIN,
   USER,
+  NONE,
 }
 
 fun Success<UserInfoDto>.toCredentials(input: InputCredentials) =
@@ -29,4 +30,5 @@ fun UserRoleDto.toRole() =
     when (this) {
       UserRoleDto.ADMIN -> UserRole.ADMIN
       UserRoleDto.USER -> UserRole.USER
+      UserRoleDto.NONE -> UserRole.NONE
     }
