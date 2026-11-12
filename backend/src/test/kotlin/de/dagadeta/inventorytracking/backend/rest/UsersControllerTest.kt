@@ -22,48 +22,56 @@ import org.springframework.test.web.servlet.get
 @AutoConfigureMockMvc(addFilters = false)
 class UsersControllerTest {
 
-    @MockitoBean
-    private lateinit var usersRepository: UsersRepository
+  @MockitoBean private lateinit var usersRepository: UsersRepository
 
-    @Autowired
-    private lateinit var webMvc: MockMvc
+  @Autowired private lateinit var webMvc: MockMvc
 
-    private val usersURL = "/api/users"
+  private val usersURL = "/api/users"
 
-    @Test
-    fun `without a user the response is empty`() {
-        usersRepository.stub { on { findAll(any<Pageable>()) } doReturn empty() }
+  @Test
+  fun `without a user the response is empty`() {
+    usersRepository.stub { on { findAll(any<Pageable>()) } doReturn empty() }
 
-        webMvc.get(usersURL)
-            .andExpect { status { isOk() } }
-            .andExpect { content { json("""{"content":[],"page":{"size":0,"number":0,"totalElements":0,"totalPages":1}}""") } }
-    }
-
-    @Test
-    fun `available users are listed`() {
-        usersRepository.stub {
-            on { findAll(any<Pageable>()) } doReturn PageImpl(
-                listOf(
-                    InventoryUser(1L, "Admin", "{noop}password", ADMIN),
-                    InventoryUser(2L, "User", "{noop}password", USER),
-                )
-            )
+    webMvc
+        .get(usersURL)
+        .andExpect { status { isOk() } }
+        .andExpect {
+          content {
+            json("""{"content":[],"page":{"size":0,"number":0,"totalElements":0,"totalPages":1}}""")
+          }
         }
+  }
 
-        webMvc.get(usersURL)
-            .andExpect { status { isOk() } }
-            .andExpect {
-                content {
-                    json(
-                        """{
-                        |   "content":[
-                        |       {"id":1,"name":"Admin","role":"ADMIN"},
-                        |       {"id":2,"name":"User","role":"USER"}
-                        |   ],
-                        |   "page":{"size":2,"number":0,"totalElements":2,"totalPages":1}
-                        |}""".trimMargin()
-                    )
-                }
-            }
+  @Test
+  fun `available users are listed`() {
+    usersRepository.stub {
+      on { findAll(any<Pageable>()) } doReturn
+          PageImpl(
+              listOf(
+                  InventoryUser(1L, "Admin", "{noop}password", ADMIN),
+                  InventoryUser(2L, "User", "{noop}password", USER),
+              ),
+          )
     }
+
+    webMvc
+        .get(usersURL)
+        .andExpect { status { isOk() } }
+        .andExpect {
+          content {
+            json(
+                """
+                |{
+                |   "content":[
+                |       {"id":1,"name":"Admin","role":"ADMIN"},
+                |       {"id":2,"name":"User","role":"USER"}
+                |   ],
+                |   "page":{"size":2,"number":0,"totalElements":2,"totalPages":1}
+                |}
+                """
+                    .trimMargin(),
+            )
+          }
+        }
+  }
 }

@@ -19,22 +19,22 @@ class PasswordChangeController(
     private val usersRepository: UsersRepository,
     private val passwordEncoder: PasswordEncoder,
 ) {
-    private val logger = KotlinLogging.logger {}
+  private val logger = KotlinLogging.logger {}
 
-    @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun changePassword(@RequestBody body: ChangePasswordDto): ResponseEntity<Unit> {
-        val loggedInUsername = loginUtilityService.loggedInUser?.username
-        val storedUser = usersRepository.findByName(loggedInUsername).first()
-        if (passwordEncoder.matches(body.currentPassword, storedUser.password)) {
-            passwordEncoder.encode(body.newPassword)?.let {
-                storedUser.password = it
-                usersRepository.save(storedUser)
-                logger.info { "password changed" }
-                return ResponseEntity.ok().build()
-            }
-            logger.info { "encoded new password for user '$loggedInUsername' was null" }
-        }
-        logger.info { "password hashes do not match for user '$loggedInUsername'" }
-        return ResponseEntity.badRequest().build()
+  @PostMapping(consumes = [MediaType.APPLICATION_JSON_VALUE])
+  fun changePassword(@RequestBody body: ChangePasswordDto): ResponseEntity<Unit> {
+    val loggedInUsername = loginUtilityService.loggedInUser?.username
+    val storedUser = usersRepository.findByName(loggedInUsername).first()
+    if (passwordEncoder.matches(body.currentPassword, storedUser.password)) {
+      passwordEncoder.encode(body.newPassword)?.let {
+        storedUser.password = it
+        usersRepository.save(storedUser)
+        logger.info { "password changed" }
+        return ResponseEntity.ok().build()
+      }
+      logger.info { "encoded new password for user '$loggedInUsername' was null" }
     }
+    logger.info { "password hashes do not match for user '$loggedInUsername'" }
+    return ResponseEntity.badRequest().build()
+  }
 }

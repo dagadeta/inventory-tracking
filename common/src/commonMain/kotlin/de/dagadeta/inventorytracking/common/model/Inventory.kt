@@ -10,7 +10,7 @@ data class InventoryItemDto(
     val lentAmount: Int,
     val remainingAmount: Int,
 ) {
-    companion object {
-        const val ENDPOINT = "/api/inventory/items"
-    }
+  companion object {
+    const val ENDPOINT = "/api/inventory/items"
+  }
 }

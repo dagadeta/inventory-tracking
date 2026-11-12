@@ -15,10 +15,13 @@ import org.springframework.web.bind.annotation.RestController
 class InventoryController(
     private val inventoryService: InventoryService,
 ) {
-    @GetMapping
-    fun getInventoryItems(@PageableDefault(page = 0, size = 50) pageable: Pageable): Page<InventoryItemDto> {
-        return inventoryService.allInventoryItemAmounts(pageable).map { it.toDto() }
-    }
+  @GetMapping
+  fun getInventoryItems(
+      @PageableDefault(page = 0, size = 50) pageable: Pageable,
+  ): Page<InventoryItemDto> {
+    return inventoryService.allInventoryItemAmounts(pageable).map { it.toDto() }
+  }
 }
 
-fun InventoryItemAmounts.toDto() = InventoryItemDto(id, name, totalAmount, lentAmount, remainingAmount)
+fun InventoryItemAmounts.toDto() =
+    InventoryItemDto(id, name, totalAmount, lentAmount, remainingAmount)

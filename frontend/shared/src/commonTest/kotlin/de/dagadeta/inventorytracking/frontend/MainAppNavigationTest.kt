@@ -13,36 +13,32 @@ import kotlin.test.Test
 @OptIn(ExperimentalTestApi::class)
 class MainAppNavigationTest {
 
-    @Test
-    fun `navigation rail can be expanded and collapsed`() = runComposeUiTest {
-        setContent {
-            MainAppNavigation(fakeAPI)
-        }
+  @Test
+  fun `navigation rail can be expanded and collapsed`() = runComposeUiTest {
+    setContent { MainAppNavigation(fakeAPI) }
 
-        onNodeWithTag(expandButtonTag).assert(expectValue(StateDescription, "Collapsed"))
-        onNodeWithTag(expandButtonTag).performClick()
-        onNodeWithTag(expandButtonTag).assert(expectValue(StateDescription, "Expanded"))
-        onNodeWithTag(expandButtonTag).performClick()
-        onNodeWithTag(expandButtonTag).assert(expectValue(StateDescription, "Collapsed"))
-    }
+    onNodeWithTag(expandButtonTag).assert(expectValue(StateDescription, "Collapsed"))
+    onNodeWithTag(expandButtonTag).performClick()
+    onNodeWithTag(expandButtonTag).assert(expectValue(StateDescription, "Expanded"))
+    onNodeWithTag(expandButtonTag).performClick()
+    onNodeWithTag(expandButtonTag).assert(expectValue(StateDescription, "Collapsed"))
+  }
 
-    @Test
-    fun `can switch between inventory and users list`() = runComposeUiTest {
-        setContent {
-            MainAppNavigation(fakeAPI)
-        }
+  @Test
+  fun `can switch between inventory and users list`() = runComposeUiTest {
+    setContent { MainAppNavigation(fakeAPI) }
 
-        onNodeWithTag(inventoryListTag).assertExists()
-        onNodeWithTag(usersListTag).assertDoesNotExist()
+    onNodeWithTag(inventoryListTag).assertExists()
+    onNodeWithTag(usersListTag).assertDoesNotExist()
 
-        onNodeWithTag("navigate-to-Users").performClick()
+    onNodeWithTag("navigate-to-Users").performClick()
 
-        onNodeWithTag(inventoryListTag).assertDoesNotExist()
-        onNodeWithTag(usersListTag).assertExists()
+    onNodeWithTag(inventoryListTag).assertDoesNotExist()
+    onNodeWithTag(usersListTag).assertExists()
 
-        onNodeWithTag("navigate-to-Inventory").performClick()
+    onNodeWithTag("navigate-to-Inventory").performClick()
 
-        onNodeWithTag(inventoryListTag).assertExists()
-        onNodeWithTag(usersListTag).assertDoesNotExist()
-    }
+    onNodeWithTag(inventoryListTag).assertExists()
+    onNodeWithTag(usersListTag).assertDoesNotExist()
+  }
 }

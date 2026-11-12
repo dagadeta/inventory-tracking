@@ -9,14 +9,13 @@ import jakarta.persistence.Table
 @Entity
 @Table(schema = "inventory", name = "users")
 data class InventoryUser(
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    var id: Long = 0,
+    @Id @GeneratedValue(strategy = IDENTITY) var id: Long = 0,
     val name: String,
     var password: String,
     val role: UserRole,
 )
 
 enum class UserRole {
-    ADMIN, USER
+  ADMIN,
+  USER,
 }

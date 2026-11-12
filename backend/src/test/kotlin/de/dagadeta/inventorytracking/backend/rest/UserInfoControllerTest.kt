@@ -19,49 +19,45 @@ import org.springframework.test.web.servlet.get
 @WebMvcTest(UserInfoController::class, LoginUtilityService::class, SecurityConfiguration::class)
 class UserInfoControllerTest {
 
-    @MockitoBean
-    private lateinit var usersRepository: UsersRepository
+  @MockitoBean private lateinit var usersRepository: UsersRepository
 
-    @Autowired
-    private lateinit var webMvc: MockMvc
+  @Autowired private lateinit var webMvc: MockMvc
 
-    private val userInfoURL = "/api/user-info"
+  private val userInfoURL = "/api/user-info"
 
-    @BeforeEach
-    fun initUser() {
-        usersRepository.stub {
-            on { findByName("User") } doReturn listOf(
-                InventoryUser(2L, "User", "{noop}password", USER)
+  @BeforeEach
+  fun initUser() {
+    usersRepository.stub {
+      on { findByName("User") } doReturn
+          listOf(
+              InventoryUser(2L, "User", "{noop}password", USER),
+          )
+    }
+  }
+
+  @Test
+  fun `without credentials no user info`() {
+    webMvc.get(userInfoURL).andExpect { status { isUnauthorized() } }
+  }
+
+  @Test
+  fun `with wrong credentials no user info`() {
+    webMvc
+        .get(userInfoURL) { with(httpBasic("User", "wrong password")) }
+        .andExpect { status { isUnauthorized() } }
+  }
+
+  @Test
+  fun `with right credentials the user info is returned`() {
+    webMvc
+        .get(userInfoURL) { with(httpBasic("User", "password")) }
+        .andExpect { status { isOk() } }
+        .andExpect {
+          content {
+            json(
+                """{"id":2,"name":"User","role":"USER"}""",
             )
+          }
         }
-    }
-
-    @Test
-    fun `without credentials no user info`() {
-        webMvc.get(userInfoURL)
-            .andExpect { status { isUnauthorized() } }
-    }
-
-    @Test
-    fun `with wrong credentials no user info`() {
-        webMvc.get(userInfoURL) {
-            with(httpBasic("User", "wrong password"))
-        }
-            .andExpect { status { isUnauthorized() } }
-    }
-
-    @Test
-    fun `with right credentials the user info is returned`() {
-        webMvc.get(userInfoURL) {
-            with(httpBasic("User", "password"))
-        }
-            .andExpect { status { isOk() } }
-            .andExpect {
-                content {
-                    json(
-                        """{"id":2,"name":"User","role":"USER"}"""
-                    )
-                }
-            }
-    }
+  }
 }

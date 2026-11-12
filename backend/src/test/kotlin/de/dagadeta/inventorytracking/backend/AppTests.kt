@@ -18,33 +18,35 @@ import org.springframework.test.web.servlet.client.expectBody
 @AutoConfigureEmbeddedDatabase
 class AppTests {
 
-    companion object {
-        lateinit var client: RestTestClient
+  companion object {
+    lateinit var client: RestTestClient
 
-        @JvmStatic
-        @BeforeAll
-        fun initClient(@Value($$"${local.server.port}") port: Int) {
-            client = RestTestClient.bindToServer().baseUrl("http://localhost:$port").build()
+    @JvmStatic
+    @BeforeAll
+    fun initClient(@Value($$"${local.server.port}") port: Int) {
+      client = RestTestClient.bindToServer().baseUrl("http://localhost:$port").build()
+    }
+  }
+
+  @Test fun contextLoads() {}
+
+  @Test
+  fun `on first startup, a default admin user is created`() {
+    client
+        .get()
+        .uri("/api/users")
+        .accept(APPLICATION_JSON)
+        .headers { it.setBasicAuth("Admin", "very secret") }
+        .exchange()
+        .expectStatus()
+        .isOk
+        .expectHeader()
+        .contentType(APPLICATION_JSON)
+        .expectBody<PageDto<UserDto>>()
+        .consumeWith {
+          val content = it.responseBody!!.content
+          assertThat(content).hasSizeGreaterThan(0)
+          assertThat(content).contains(UserDto(1L, "Admin", ADMIN))
         }
-    }
-
-    @Test
-    fun contextLoads() {
-    }
-
-    @Test
-    fun `on first startup, a default admin user is created`() {
-        client.get().uri("/api/users")
-            .accept(APPLICATION_JSON)
-            .headers { it.setBasicAuth("Admin", "very secret") }
-            .exchange()
-            .expectStatus().isOk
-            .expectHeader().contentType(APPLICATION_JSON)
-            .expectBody<PageDto<UserDto>>()
-            .consumeWith {
-                val content = it.responseBody!!.content
-                assertThat(content).hasSizeGreaterThan(0)
-                assertThat(content).contains(UserDto(1L, "Admin", ADMIN))
-            }
-    }
+  }
 }

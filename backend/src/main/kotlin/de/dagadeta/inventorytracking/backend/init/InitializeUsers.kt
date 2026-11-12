@@ -14,14 +14,14 @@ class InitializeUsers(
     private val usersRepository: UsersRepository,
     private val passwordEncoder: PasswordEncoder,
 ) {
-    private val log = KotlinLogging.logger {}
+  private val log = KotlinLogging.logger {}
 
-    @EventListener(ApplicationReadyEvent::class)
-    fun initializeUsers() {
-        if (usersRepository.count() > 0L) return
+  @EventListener(ApplicationReadyEvent::class)
+  fun initializeUsers() {
+    if (usersRepository.count() > 0L) return
 
-        log.info { "Initializing admin user" }
-        val password = passwordEncoder.encode("very secret")!!
-        usersRepository.save(InventoryUser(name = "Admin", password = password, role = ADMIN))
-    }
+    log.info { "Initializing admin user" }
+    val password = passwordEncoder.encode("very secret")!!
+    usersRepository.save(InventoryUser(name = "Admin", password = password, role = ADMIN))
+  }
 }
