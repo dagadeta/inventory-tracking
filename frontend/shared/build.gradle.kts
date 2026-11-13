@@ -57,3 +57,5 @@ kotlin {
 }
 
 val isCiEnvironment = providers.environmentVariable("CI").isPresent
+
+tasks.named<Test>("jvmTest") { jvmArgs("--enable-native-access=ALL-UNNAMED") }
