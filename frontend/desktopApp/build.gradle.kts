@@ -21,6 +21,9 @@ compose.desktop {
   application {
     mainClass = "de.dagadeta.inventorytracking.frontend.MainKt"
 
+    // Applies to both `./gradlew run` AND packaged dmg/msi/deb installers
+    jvmArgs += listOf("--enable-native-access=ALL-UNNAMED")
+
     nativeDistributions {
       targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
       packageName = "de.dagadeta.inventorytracking.frontent"
