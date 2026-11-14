@@ -8,35 +8,29 @@ import androidx.compose.ui.text.AnnotatedString
 import de.dagadeta.inventorytracking.frontend.http.fakeAPI
 import kotlin.test.Test
 
-
 @OptIn(ExperimentalTestApi::class)
 class AppTest {
-    @Test
-    fun `shows Login when no credentials are provided`() = runComposeUiTest {
-        setContent {
-            ConnectedApp(fakeAPI)
-        }
+  @Test
+  fun `shows Login when no credentials are provided`() = runComposeUiTest {
+    setContent { ConnectedApp(fakeAPI) }
 
-        onNodeWithTag(userNameTag).assert(expectValue(EditableText, AnnotatedString("")))
-        onNodeWithTag(passwordTag).assert(expectValue(EditableText, AnnotatedString("")))
-        onNodeWithTag(inventoryListTag).assertDoesNotExist()
-        onNodeWithTag(usersListTag).assertDoesNotExist()
-    }
+    onNodeWithTag(userNameTag).assert(expectValue(EditableText, AnnotatedString("")))
+    onNodeWithTag(passwordTag).assert(expectValue(EditableText, AnnotatedString("")))
+    onNodeWithTag(inventoryListTag).assertDoesNotExist()
+    onNodeWithTag(usersListTag).assertDoesNotExist()
+  }
 
-    @Test
-    fun `after login inventory list is shown`() = runComposeUiTest {
-        setContent {
-            ConnectedApp(fakeAPI)
-        }
+  @Test
+  fun `after login inventory list is shown`() = runComposeUiTest {
+    setContent { ConnectedApp(fakeAPI) }
 
-        onNodeWithTag(userNameTag).performTextInput("Karl")
-        onNodeWithTag(passwordTag).performTextInput("Klammer")
-        onNodeWithTag(loginButtonTag).performClick()
+    onNodeWithTag(userNameTag).performTextInput("Karl")
+    onNodeWithTag(passwordTag).performTextInput("Klammer")
+    onNodeWithTag(loginButtonTag).performClick()
 
-        onNodeWithTag(inventoryListTag).assertExists()
-        onNodeWithTag(userNameTag).assertDoesNotExist()
-        onNodeWithTag(passwordTag).assertDoesNotExist()
-        onNodeWithTag(usersListTag).assertDoesNotExist()
-    }
+    onNodeWithTag(inventoryListTag).assertExists()
+    onNodeWithTag(userNameTag).assertDoesNotExist()
+    onNodeWithTag(passwordTag).assertDoesNotExist()
+    onNodeWithTag(usersListTag).assertDoesNotExist()
+  }
 }
-

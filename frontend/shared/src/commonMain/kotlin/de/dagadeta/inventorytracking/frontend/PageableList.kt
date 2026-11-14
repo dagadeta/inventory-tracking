@@ -19,37 +19,35 @@ fun <T> PageableList(
     describeItem: (T) -> String,
     modifier: Modifier = Modifier,
 ) {
-    var items by remember { mutableStateOf<PageDto<T>>(emptyPage()) }
-    var error by remember { mutableStateOf("") }
+  var items by remember { mutableStateOf<PageDto<T>>(emptyPage()) }
+  var error by remember { mutableStateOf("") }
 
-    LaunchedEffect(true) {
-        when (val result = fetchItems()) {
-            is ApiResult.Success -> {
-                items = result.data
-                error = ""
-            }
+  LaunchedEffect(true) {
+    when (val result = fetchItems()) {
+      is ApiResult.Success -> {
+        items = result.data
+        error = ""
+      }
 
-            is ApiResult.Error -> {
-                items = emptyPage()
-                error = "${result.message} (${result.code})"
-            }
+      is ApiResult.Error -> {
+        items = emptyPage()
+        error = "${result.message} (${result.code})"
+      }
 
-            is ApiResult.Unprivileged -> {
-                items = emptyPage()
-                error = "You are not allowed to browse $header."
-            }
-        }
+      is ApiResult.Unprivileged -> {
+        items = emptyPage()
+        error = "You are not allowed to browse $header."
+      }
     }
-    Column(
-        modifier = modifier.testTag(listColumnTag),
-    ) {
-        Text(header, fontWeight = Bold)
+  }
+  Column(
+      modifier = modifier.testTag(listColumnTag),
+  ) {
+    Text(header, fontWeight = Bold)
 
-        if (error.isNotEmpty()) {
-            Text(error)
-        }
-        items.content.forEach {
-            Text(describeItem(it))
-        }
+    if (error.isNotEmpty()) {
+      Text(error)
     }
+    items.content.forEach { Text(describeItem(it)) }
+  }
 }

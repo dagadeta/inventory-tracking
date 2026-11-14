@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class UserInfoController(
     private val loginUtilityService: LoginUtilityService,
-    private val usersRepository: UsersRepository
+    private val usersRepository: UsersRepository,
 ) {
-    @GetMapping
-    fun getUserInfo(): UserInfoDto {
-        val loggedInUsername = loginUtilityService.loggedInUser?.username
-        val storedUser = usersRepository.findByName(loggedInUsername).first()
-        return storedUser.toDto()
-    }
+  @GetMapping
+  fun getUserInfo(): UserInfoDto {
+    val loggedInUsername = loginUtilityService.loggedInUser?.username
+    val storedUser = usersRepository.findByName(loggedInUsername).first()
+    return storedUser.toDto()
+  }
 }
 
 private fun InventoryUser.toDto() = UserInfoDto(id, name, role.toDto())

@@ -15,20 +15,25 @@ class DemoDataCreator(
     private val inventoryLentRepository: InventoryLentRepository,
     private val passwordEncoder: PasswordEncoder,
 ) {
-    private val log = KotlinLogging.logger {}
+  private val log = KotlinLogging.logger {}
 
-    @EventListener(ApplicationReadyEvent::class)
-    fun createDemoData() {
-        if (usersRepository.count() > 1L) return
+  @EventListener(ApplicationReadyEvent::class)
+  fun createDemoData() {
+    if (usersRepository.count() > 1L) return
 
-        log.info { "Creating temporary demo data" }
-        val password = passwordEncoder.encode("secret")!!
-        val user = usersRepository.save(InventoryUser(name = "Default User", password = password, role = USER))
+    log.info { "Creating temporary demo data" }
+    val password = passwordEncoder.encode("secret")!!
+    val user =
+        usersRepository.save(InventoryUser(name = "Default User", password = password, role = USER))
 
-        val coolingPack = inventoryRepository.save(InventoryItem(name = "Cooling Pack", amount = 10))
-        val walkingAid = inventoryRepository.save(InventoryItem(name = "Walking Aid", amount = 4))
+    val coolingPack = inventoryRepository.save(InventoryItem(name = "Cooling Pack", amount = 10))
+    val walkingAid = inventoryRepository.save(InventoryItem(name = "Walking Aid", amount = 4))
 
-        inventoryLentRepository.save(InventoryItemLent(item = coolingPack, lentBy = user, lentTo = "Some Person"))
-        inventoryLentRepository.save(InventoryItemLent(item = walkingAid, lentBy = user, lentTo = "Someone Else"))
-    }
+    inventoryLentRepository.save(
+        InventoryItemLent(item = coolingPack, lentBy = user, lentTo = "Some Person"),
+    )
+    inventoryLentRepository.save(
+        InventoryItemLent(item = walkingAid, lentBy = user, lentTo = "Someone Else"),
+    )
+  }
 }

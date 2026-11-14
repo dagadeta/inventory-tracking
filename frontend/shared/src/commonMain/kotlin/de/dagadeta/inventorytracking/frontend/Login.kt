@@ -32,87 +32,93 @@ fun Login(
     onLoginClick: (InputCredentials) -> Unit,
     credentials: Credentials,
 ) {
-    var userName by remember { mutableStateOf(credentials.userName) }
-    var password by remember { mutableStateOf(credentials.password) }
+  var userName by remember { mutableStateOf(credentials.userName) }
+  var password by remember { mutableStateOf(credentials.password) }
 
-    Column(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "Login",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp)
-        )
+  Column(
+      modifier = Modifier.padding(horizontal = 16.dp),
+      verticalArrangement = Arrangement.Center,
+  ) {
+    Text(
+        text = "Login",
+        fontSize = 28.sp,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.fillMaxWidth().padding(vertical = 32.dp),
+    )
 
-        OutlinedTextField(
-            value = userName,
-            onValueChange = { userName = it },
-            singleLine = true,
-            label = { Text("Name") },
-            keyboardOptions = KeyboardOptions(
+    OutlinedTextField(
+        value = userName,
+        onValueChange = { userName = it },
+        singleLine = true,
+        label = { Text("Name") },
+        keyboardOptions =
+            KeyboardOptions(
                 keyboardType = PersonName,
                 imeAction = Next,
             ),
-            keyboardActions = KeyboardActions(
+        keyboardActions =
+            KeyboardActions(
                 onDone = { onLoginClick(InputCredentials(userName, password)) },
             ),
-            modifier = Modifier.fillMaxWidth().testTag(userNameTag)
-        )
+        modifier = Modifier.fillMaxWidth().testTag(userNameTag),
+    )
 
-        Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            singleLine = true,
-            label = { Text("Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(
+    OutlinedTextField(
+        value = password,
+        onValueChange = { password = it },
+        singleLine = true,
+        label = { Text("Password") },
+        visualTransformation = PasswordVisualTransformation(),
+        keyboardOptions =
+            KeyboardOptions(
                 keyboardType = Password,
                 imeAction = Done,
             ),
-            keyboardActions = KeyboardActions(
+        keyboardActions =
+            KeyboardActions(
                 onDone = { onLoginClick(InputCredentials(userName, password)) },
             ),
-            modifier = Modifier.fillMaxWidth().testTag(passwordTag)
-        )
+        modifier = Modifier.fillMaxWidth().testTag(passwordTag),
+    )
 
-        Spacer(modifier = Modifier.height(32.dp))
+    Spacer(modifier = Modifier.height(32.dp))
 
-        Button(
-            onClick = { onLoginClick(InputCredentials(userName, password)) },
-            modifier = Modifier.fillMaxWidth().testTag(loginButtonTag)
-        ) {
-            Text(text = "Log in")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        if (credentials is WrongCredentials) {
-            Text(
-                text = credentials.message,
-                color = Color.Red,
-                modifier = Modifier.testTag(hintTextTag)
-            )
-        }
+    Button(
+        onClick = { onLoginClick(InputCredentials(userName, password)) },
+        modifier = Modifier.fillMaxWidth().testTag(loginButtonTag),
+    ) {
+      Text(text = "Log in")
     }
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    if (credentials is WrongCredentials) {
+      Text(
+          text = credentials.message,
+          color = Color.Red,
+          modifier = Modifier.testTag(hintTextTag),
+      )
+    }
+  }
 }
 
 private val Credentials.userName: String
-    get() = when (this) {
+  get() =
+      when (this) {
         is InputCredentials -> userName
         NoCredentials -> ""
         is UserInfo -> inputCredentials.userName
         is WrongCredentials -> inputCredentials.userName
-    }
+      }
 
 private val Credentials.password: String
-    get() = when (this) {
+  get() =
+      when (this) {
         is InputCredentials -> password
         NoCredentials -> ""
         is UserInfo -> inputCredentials.password
         is WrongCredentials -> inputCredentials.password
-    }
+      }

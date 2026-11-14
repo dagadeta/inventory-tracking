@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping(UserDto.ENDPOINT)
 @RestController
 class UsersController(
-    private val usersRepository: UsersRepository
+    private val usersRepository: UsersRepository,
 ) {
-    @GetMapping
-    fun getUsers(@PageableDefault(page = 0, size = 50) pageable: Pageable): Page<UserDto> {
-        return usersRepository.findAll(pageable).map { it.toDto() }
-    }
+  @GetMapping
+  fun getUsers(@PageableDefault(page = 0, size = 50) pageable: Pageable): Page<UserDto> {
+    return usersRepository.findAll(pageable).map { it.toDto() }
+  }
 }
 
 private fun InventoryUser.toDto() = UserDto(id, name, role.toDto())

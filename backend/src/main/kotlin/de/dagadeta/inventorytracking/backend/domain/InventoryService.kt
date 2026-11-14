@@ -12,13 +12,13 @@ class InventoryService(
     private val inventoryRepository: InventoryRepository,
     private val inventoryLentRepository: InventoryLentRepository,
 ) {
-    fun allInventoryItemAmounts(pageable: Pageable): Page<InventoryItemAmounts> =
-        inventoryRepository.findAll(pageable).map { item ->
-            InventoryItemAmounts(
-                item.id,
-                item.name,
-                totalAmount = item.amount,
-                lentAmount = inventoryLentRepository.countByItem(item),
-            )
-        }
+  fun allInventoryItemAmounts(pageable: Pageable): Page<InventoryItemAmounts> =
+      inventoryRepository.findAll(pageable).map { item ->
+        InventoryItemAmounts(
+            item.id,
+            item.name,
+            totalAmount = item.amount,
+            lentAmount = inventoryLentRepository.countByItem(item),
+        )
+      }
 }

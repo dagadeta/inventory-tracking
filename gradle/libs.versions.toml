@@ -6,6 +6,7 @@ kotlin = "2.4.21"
 kotlin-logging = "8.0.7"
 kotlinx-coroutines = "1.11.0"
 kover = "0.9.11"
+ktfmt = "0.28.0"
 ktor = "3.6.1"
 logback = "1.6.6"
 material3 = "1.12.0-alpha03"
@@ -50,5 +51,6 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 kotlinSpring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmt" }
 springDependencyManagement = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
 springframeworkBoot = { id = "org.springframework.boot", version.ref = "spring" }
