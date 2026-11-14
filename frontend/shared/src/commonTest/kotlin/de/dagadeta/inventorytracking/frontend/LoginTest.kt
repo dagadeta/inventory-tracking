@@ -7,8 +7,8 @@ import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.text.AnnotatedString
 import de.dagadeta.inventorytracking.frontend.http.Credentials.*
 import de.dagadeta.inventorytracking.frontend.http.UserRole.USER
+import io.kotest.matchers.shouldBe
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 @OptIn(ExperimentalTestApi::class)
 class LoginTest {
@@ -84,6 +84,6 @@ class LoginTest {
     onNodeWithTag(passwordTag).performTextInput("Klammer")
     onNodeWithTag(loginButtonTag).performClick()
 
-    assertEquals(InputCredentials("Karl", "Klammer"), inputCredentials)
+    inputCredentials shouldBe InputCredentials("Karl", "Klammer")
   }
 }

@@ -25,20 +25,29 @@ class MainAppNavigationTest {
   }
 
   @Test
-  fun `can switch between inventory and users list`() = runComposeUiTest {
+  fun `can switch between list items`() = runComposeUiTest {
     setContent { MainAppNavigation(fakeAPI) }
 
     onNodeWithTag(inventoryListTag).assertExists()
     onNodeWithTag(usersListTag).assertDoesNotExist()
+    onNodeWithTag(userAccountTag).assertDoesNotExist()
 
     onNodeWithTag("navigate-to-Users").performClick()
 
     onNodeWithTag(inventoryListTag).assertDoesNotExist()
     onNodeWithTag(usersListTag).assertExists()
+    onNodeWithTag(userAccountTag).assertDoesNotExist()
+
+    onNodeWithTag("navigate-to-Account").performClick()
+
+    onNodeWithTag(inventoryListTag).assertDoesNotExist()
+    onNodeWithTag(usersListTag).assertDoesNotExist()
+    onNodeWithTag(userAccountTag).assertExists()
 
     onNodeWithTag("navigate-to-Inventory").performClick()
 
     onNodeWithTag(inventoryListTag).assertExists()
     onNodeWithTag(usersListTag).assertDoesNotExist()
+    onNodeWithTag(userAccountTag).assertDoesNotExist()
   }
 }

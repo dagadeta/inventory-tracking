@@ -47,6 +47,7 @@ kotlin {
       implementation(libs.ktor.client.content.negotiation)
     }
     commonTest.dependencies {
+      implementation(libs.kotest.assertions.core)
       implementation(libs.kotlin.test)
       implementation(libs.compose.ui.test)
     }
