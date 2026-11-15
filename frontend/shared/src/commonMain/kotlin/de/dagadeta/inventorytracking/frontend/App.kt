@@ -55,7 +55,10 @@ fun ConnectedApp(
                     .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-          MainAppNavigation(api)
+          MainAppNavigation(
+              api = api,
+              role = (credentials as UserInfo).role,
+          )
         }
       }
     }
