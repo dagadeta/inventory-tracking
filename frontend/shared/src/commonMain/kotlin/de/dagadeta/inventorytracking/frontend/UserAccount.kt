@@ -2,11 +2,11 @@ package de.dagadeta.inventorytracking.frontend
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
@@ -126,7 +126,7 @@ fun UserAccount(
       Spacer(modifier = Modifier.height(16.dp))
       Text(
           text = texts.info,
-          color = Color.DarkGray,
+          color = MaterialTheme.colorScheme.secondary,
           modifier = Modifier.testTag(infoTextTag),
       )
     }
@@ -134,7 +134,7 @@ fun UserAccount(
       Spacer(modifier = Modifier.height(16.dp))
       Text(
           text = texts.error,
-          color = Color.Red,
+          color = MaterialTheme.colorScheme.error,
           modifier = Modifier.testTag(errorTextTag),
       )
     }

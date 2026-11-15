@@ -1,5 +1,6 @@
 package de.dagadeta.inventorytracking.frontend
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -130,7 +131,12 @@ fun MainAppNavigation(
       }
     }
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+        modifier =
+            Modifier.fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .background(
+                    color = MaterialTheme.colorScheme.surface,
+                ),
         content = selectedItem.content,
     )
   }
