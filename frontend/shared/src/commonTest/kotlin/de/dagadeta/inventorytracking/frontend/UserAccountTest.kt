@@ -8,6 +8,7 @@ import de.dagadeta.inventorytracking.common.model.PasswordChangeResult.WRONG_PAS
 import de.dagadeta.inventorytracking.common.model.UserInfoDto
 import de.dagadeta.inventorytracking.common.model.UserRoleDto.USER
 import de.dagadeta.inventorytracking.frontend.http.ApiResult.*
+import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
@@ -18,6 +19,7 @@ class UserAccountTest {
       UserAccount(
           loadUserInfo = { Success(UserInfoDto(1, "Hans", USER)) },
           changePassword = { _, _ -> Success(ChangePasswordResponseDto(SUCCESS)) },
+          logout = {},
       )
     }
 
@@ -38,6 +40,7 @@ class UserAccountTest {
       UserAccount(
           loadUserInfo = { Success(UserInfoDto(1, "Hans", USER)) },
           changePassword = { _, _ -> Success(ChangePasswordResponseDto(SUCCESS)) },
+          logout = {},
       )
     }
 
@@ -57,6 +60,7 @@ class UserAccountTest {
       UserAccount(
           loadUserInfo = { Success(UserInfoDto(1, "Hans", USER)) },
           changePassword = { _, _ -> Success(ChangePasswordResponseDto(WRONG_PASSWORD)) },
+          logout = {},
       )
     }
 
@@ -76,6 +80,7 @@ class UserAccountTest {
       UserAccount(
           loadUserInfo = { Success(UserInfoDto(1, "Hans", USER)) },
           changePassword = { _, _ -> Error("something went really wrong", 42) },
+          logout = {},
       )
     }
 
@@ -95,6 +100,7 @@ class UserAccountTest {
       UserAccount(
           loadUserInfo = { Success(UserInfoDto(1, "Hans", USER)) },
           changePassword = { _, _ -> Unprivileged },
+          logout = {},
       )
     }
 
@@ -107,6 +113,23 @@ class UserAccountTest {
     onNodeWithTag(infoTextTag).assertDoesNotExist()
     onNodeWithTag(errorTextTag)
         .assertTextEquals("You are not authorized to change password for this account.")
+  }
+
+  @Test
+  fun `logout button calls logout action`() = runComposeUiTest {
+    var invoked = false
+    setContent {
+      UserAccount(
+          loadUserInfo = { Success(UserInfoDto(1, "Hans", USER)) },
+          changePassword = { _, _ -> Success(ChangePasswordResponseDto(SUCCESS)) },
+          logout = { invoked = true },
+      )
+    }
+
+    onNodeWithTag(logoutButtonTag).assertExists()
+    onNodeWithTag(logoutButtonTag).performClick()
+
+    invoked shouldBe true
   }
 }
 

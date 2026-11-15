@@ -58,6 +58,10 @@ fun ConnectedApp(
           MainAppNavigation(
               api = api,
               role = (credentials as UserInfo).role,
+              logout = {
+                api.logout()
+                credentials = NoCredentials
+              },
           )
         }
       }
