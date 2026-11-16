@@ -15,6 +15,9 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
 import de.dagadeta.inventorytracking.frontend.http.API
+import de.dagadeta.inventorytracking.frontend.http.UserRole
+import de.dagadeta.inventorytracking.frontend.http.UserRole.ADMIN
+import de.dagadeta.inventorytracking.frontend.http.UserRole.USER
 import inventory_tracking.frontend.shared.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -28,20 +31,23 @@ private data class NavItem(
     val name: String,
     val selectedIcon: Painter,
     val unselectedIcon: Painter,
+    val minRole: UserRole,
     val content: @Composable (ColumnScope.() -> Unit),
 )
 
 @Composable
 fun MainAppNavigation(
     api: API,
+    role: UserRole,
     modifier: Modifier = Modifier,
 ) {
-  val items =
+  val allNavItems =
       listOf(
           NavItem(
               name = "Inventory",
               selectedIcon = painterResource(Res.drawable.view_list_filled),
               unselectedIcon = painterResource(Res.drawable.view_list),
+              minRole = USER,
               content = {
                 PageableList(
                     header = "Inventory",
@@ -57,6 +63,7 @@ fun MainAppNavigation(
               name = "Users",
               selectedIcon = painterResource(Res.drawable.group_filled),
               unselectedIcon = painterResource(Res.drawable.group),
+              minRole = ADMIN,
               content = {
                 PageableList(
                     header = "Users",
@@ -70,6 +77,7 @@ fun MainAppNavigation(
               name = "Account",
               selectedIcon = painterResource(Res.drawable.account_filled),
               unselectedIcon = painterResource(Res.drawable.account),
+              minRole = USER,
               content = {
                 UserAccount(
                     loadUserInfo = { api.fetchUserInfo() },
@@ -80,11 +88,12 @@ fun MainAppNavigation(
           ),
       )
 
-  var selectedItem by rememberSaveable { mutableStateOf(items.first()) }
+  var selectedItem by rememberSaveable { mutableStateOf(allNavItems.first()) }
 
   val state = rememberWideNavigationRailState()
   val scope = rememberCoroutineScope()
   val headerDescription = if (state.targetValue == Expanded) "Collapse rail" else "Expand rail"
+  val shownNavItems = allNavItems.filter { role >= it.minRole }
 
   Row(modifier = modifier.fillMaxWidth()) {
     WideNavigationRail(
@@ -116,7 +125,7 @@ fun MainAppNavigation(
           }
         },
     ) {
-      items.forEach { item ->
+      shownNavItems.forEach { item ->
         WideNavigationRailItem(
             railExpanded = state.targetValue == Expanded,
             icon = {

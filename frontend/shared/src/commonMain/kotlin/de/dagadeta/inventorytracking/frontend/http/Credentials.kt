@@ -18,9 +18,9 @@ sealed interface Credentials {
 }
 
 enum class UserRole {
-  ADMIN,
-  USER,
   NONE,
+  USER,
+  ADMIN,
 }
 
 fun Success<UserInfoDto>.toCredentials(input: InputCredentials) =

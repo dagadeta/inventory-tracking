@@ -6,6 +6,7 @@ plugins {
   alias(libs.plugins.composeMultiplatform)
   alias(libs.plugins.composeCompiler)
   alias(libs.plugins.ktfmt)
+  alias(libs.plugins.mokkery)
 }
 
 kotlin {
@@ -47,9 +48,9 @@ kotlin {
       implementation(libs.ktor.client.content.negotiation)
     }
     commonTest.dependencies {
+      implementation(libs.compose.ui.test)
       implementation(libs.kotest.assertions.core)
       implementation(libs.kotlin.test)
-      implementation(libs.compose.ui.test)
     }
     wasmJsMain.dependencies { implementation(libs.ktor.client.js) }
     jvmMain.dependencies { implementation(libs.ktor.client.java) }

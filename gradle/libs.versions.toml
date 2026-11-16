@@ -12,6 +12,7 @@ ktor = "3.6.1"
 logback = "1.6.6"
 material3 = "1.12.0-alpha03"
 mockito-kotlin = "6.4.0"
+mokkery = "3.6.0"
 spring = "4.1.2"
 spring-dependency-management = "1.1.7"
 zonky = "2.8.0"
@@ -54,5 +55,6 @@ kotlinSpring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotli
 kotlinxSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmt" }
+mokkery = { id = "dev.mokkery", version.ref = "mokkery" }
 springDependencyManagement = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
 springframeworkBoot = { id = "org.springframework.boot", version.ref = "spring" }
