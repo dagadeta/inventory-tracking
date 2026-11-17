@@ -23,7 +23,7 @@ class MainAppNavigationTest {
 
   @Test
   fun `navigation rail can be expanded and collapsed`() = runComposeUiTest {
-    setContent { MainAppNavigation(fakeAPI, ADMIN) }
+    setContent { MainAppNavigation(fakeAPI, ADMIN, {}) }
 
     onNodeWithTag(expandButtonTag).assert(expectValue(StateDescription, "Collapsed"))
     onNodeWithTag(expandButtonTag).performClick()
@@ -34,7 +34,7 @@ class MainAppNavigationTest {
 
   @Test
   fun `can switch between list items`() = runComposeUiTest {
-    setContent { MainAppNavigation(fakeAPI, ADMIN) }
+    setContent { MainAppNavigation(fakeAPI, ADMIN, {}) }
 
     onNodeWithTag(inventoryListTag).assertExists()
     onNodeWithTag(usersListTag).assertDoesNotExist()
@@ -61,7 +61,7 @@ class MainAppNavigationTest {
 
   @Test
   fun `admin users see all navigation items`() = runComposeUiTest {
-    setContent { MainAppNavigation(fakeAPI, ADMIN) }
+    setContent { MainAppNavigation(fakeAPI, ADMIN, {}) }
 
     onNodeWithTag("navigate-to-Inventory").assertExists()
     onNodeWithTag("navigate-to-Users").assertExists()
@@ -71,7 +71,7 @@ class MainAppNavigationTest {
   @Test
   fun `non-admin users don't see the users item`() = runComposeUiTest {
     val api = mock<API> { everySuspend { fetchInventoryItems() } calls { Success(emptyPage()) } }
-    setContent { MainAppNavigation(api, USER) }
+    setContent { MainAppNavigation(api, USER, {}) }
 
     onNodeWithTag("navigate-to-Inventory").assertExists()
     onNodeWithTag("navigate-to-Users").assertDoesNotExist()

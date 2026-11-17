@@ -29,12 +29,14 @@ const val changePasswordComposableTag = "change-password-composable"
 const val changePasswordButtonTag = "change-password-button"
 const val infoTextTag = "info-text"
 const val errorTextTag = "error-text"
+const val logoutButtonTag = "logout-button"
 
 @Composable
 fun UserAccount(
     loadUserInfo: suspend () -> ApiResult<UserInfoDto>,
     changePassword:
         suspend (oldPassword: String, newPassword: String) -> ApiResult<ChangePasswordResponseDto>,
+    logout: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
   val coroutineScope = rememberCoroutineScope()
@@ -112,6 +114,7 @@ fun UserAccount(
           modifier = Modifier.fillMaxWidth().testTag(changePasswordComposableTag),
       )
     } else {
+      Spacer(modifier = Modifier.height(16.dp))
       Button(
           onClick = {
             texts = Texts()
@@ -137,6 +140,13 @@ fun UserAccount(
           color = MaterialTheme.colorScheme.error,
           modifier = Modifier.testTag(errorTextTag),
       )
+    }
+    Spacer(modifier = Modifier.height(16.dp))
+    Button(
+        onClick = { logout() },
+        modifier = Modifier.testTag(logoutButtonTag),
+    ) {
+      Text("Logout")
     }
   }
 }

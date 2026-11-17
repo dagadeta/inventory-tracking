@@ -18,6 +18,7 @@ class AppTest {
     onNodeWithTag(passwordTag).assert(expectValue(EditableText, AnnotatedString("")))
     onNodeWithTag(inventoryListTag).assertDoesNotExist()
     onNodeWithTag(usersListTag).assertDoesNotExist()
+    onNodeWithTag(userAccountTag).assertDoesNotExist()
   }
 
   @Test
@@ -32,5 +33,23 @@ class AppTest {
     onNodeWithTag(userNameTag).assertDoesNotExist()
     onNodeWithTag(passwordTag).assertDoesNotExist()
     onNodeWithTag(usersListTag).assertDoesNotExist()
+    onNodeWithTag(userAccountTag).assertDoesNotExist()
+  }
+
+  @Test
+  fun `after logout the login form is shown again`() = runComposeUiTest {
+    setContent { ConnectedApp(fakeAPI) }
+
+    onNodeWithTag(userNameTag).performTextInput("Karl")
+    onNodeWithTag(passwordTag).performTextInput("Klammer")
+    onNodeWithTag(loginButtonTag).performClick()
+    onNodeWithTag("navigate-to-Account").performClick()
+    onNodeWithTag(logoutButtonTag).performClick()
+
+    onNodeWithTag(userNameTag).assert(expectValue(EditableText, AnnotatedString("")))
+    onNodeWithTag(passwordTag).assert(expectValue(EditableText, AnnotatedString("")))
+    onNodeWithTag(inventoryListTag).assertDoesNotExist()
+    onNodeWithTag(usersListTag).assertDoesNotExist()
+    onNodeWithTag(userAccountTag).assertDoesNotExist()
   }
 }

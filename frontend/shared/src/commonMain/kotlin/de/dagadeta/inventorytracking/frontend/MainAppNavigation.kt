@@ -39,6 +39,7 @@ private data class NavItem(
 fun MainAppNavigation(
     api: API,
     role: UserRole,
+    logout: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
   val allNavItems =
@@ -82,6 +83,7 @@ fun MainAppNavigation(
                 UserAccount(
                     loadUserInfo = { api.fetchUserInfo() },
                     changePassword = { current, new -> api.changePassword(current, new) },
+                    logout = { logout() },
                     modifier = Modifier.testTag(userAccountTag),
                 )
               },

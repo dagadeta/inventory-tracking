@@ -9,7 +9,11 @@ import de.dagadeta.inventorytracking.frontend.http.Credentials.UserInfo
 sealed interface Credentials {
   object NoCredentials : Credentials
 
-  data class InputCredentials(val userName: String, val password: String) : Credentials
+  data class InputCredentials(val userName: String, val password: String) : Credentials {
+    companion object {
+      val EMPTY_CREDENTIALS = InputCredentials("", "")
+    }
+  }
 
   data class WrongCredentials(val inputCredentials: InputCredentials, val message: String) :
       Credentials
