@@ -57,10 +57,6 @@ fun Login(
                 keyboardType = PersonName,
                 imeAction = Next,
             ),
-        keyboardActions =
-            KeyboardActions(
-                onDone = { onLoginClick(InputCredentials(userName, password)) },
-            ),
         modifier = Modifier.fillMaxWidth().testTag(userNameTag),
     )
 
