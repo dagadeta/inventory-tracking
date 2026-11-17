@@ -6,16 +6,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import de.dagadeta.inventorytracking.common.model.UserInfoDto
-import de.dagadeta.inventorytracking.frontend.http.*
-import de.dagadeta.inventorytracking.frontend.http.ApiResult.*
-import de.dagadeta.inventorytracking.frontend.http.Credentials.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import de.dagadeta.inventorytracking.frontend.UserAccountAction.LoginAction
+import de.dagadeta.inventorytracking.frontend.http.API
+import de.dagadeta.inventorytracking.frontend.http.Credentials.UserInfo
+import de.dagadeta.inventorytracking.frontend.http.HttpAPI
+import de.dagadeta.inventorytracking.frontend.http.fakeAPI
 import de.dagadeta.inventorytracking.frontend.theme.AppTheme
-import kotlinx.coroutines.launch
 
 @Composable fun App() = ConnectedApp(HttpAPI())
 
@@ -25,27 +28,18 @@ import kotlinx.coroutines.launch
 fun ConnectedApp(
     api: API,
 ) {
-  val coroutineScope = rememberCoroutineScope()
+  val userAccountViewModel = viewModel { UserAccountViewModel(api) }
+  val userAccountState by userAccountViewModel.state.collectAsState()
 
   AppTheme {
-    var credentials by remember { mutableStateOf<Credentials>(NoCredentials) }
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
     ) {
-      if (credentials !is UserInfo) {
+      if (!userAccountState.isLoggedIn) {
         Login(
-            credentials = credentials,
-            onLoginClick = {
-              coroutineScope.launch {
-                credentials =
-                    when (val info = api.login(it)) {
-                      is Error -> WrongCredentials(it, info.message)
-                      is Success<UserInfoDto> -> info.toCredentials(it)
-                      Unprivileged -> WrongCredentials(it, "Invalid user name or password.")
-                    }
-              }
-            },
+            credentials = userAccountState.credentials,
+            onLoginClick = { userAccountViewModel.onAction(LoginAction(it)) },
         )
       } else {
         Column(
@@ -57,11 +51,8 @@ fun ConnectedApp(
         ) {
           MainAppNavigation(
               api = api,
-              role = (credentials as UserInfo).role,
-              logout = {
-                api.logout()
-                credentials = NoCredentials
-              },
+              role = (userAccountState.credentials as UserInfo).role,
+              userAccountViewModel = userAccountViewModel,
           )
         }
       }
