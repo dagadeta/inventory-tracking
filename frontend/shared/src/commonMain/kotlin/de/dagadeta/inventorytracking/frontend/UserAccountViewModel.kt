@@ -6,14 +6,14 @@ import de.dagadeta.inventorytracking.common.model.ChangePasswordResponseDto
 import de.dagadeta.inventorytracking.common.model.PasswordChangeResult.SUCCESS
 import de.dagadeta.inventorytracking.common.model.PasswordChangeResult.WRONG_PASSWORD
 import de.dagadeta.inventorytracking.common.model.UserInfoDto
+import de.dagadeta.inventorytracking.common.model.UserRoleDto
+import de.dagadeta.inventorytracking.frontend.Credentials.*
 import de.dagadeta.inventorytracking.frontend.UserAccountAction.*
 import de.dagadeta.inventorytracking.frontend.http.API
 import de.dagadeta.inventorytracking.frontend.http.ApiResult
 import de.dagadeta.inventorytracking.frontend.http.ApiResult.Success
 import de.dagadeta.inventorytracking.frontend.http.ApiResult.Unprivileged
-import de.dagadeta.inventorytracking.frontend.http.Credentials
-import de.dagadeta.inventorytracking.frontend.http.Credentials.*
-import de.dagadeta.inventorytracking.frontend.http.toCredentials
+import de.dagadeta.inventorytracking.frontend.http.HttpCredentials
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -27,22 +27,21 @@ class UserAccountViewModel(
 
   fun onAction(action: UserAccountAction) {
     when (action) {
-      is LoginAction -> login(action.credentials)
+      is LoginAction -> login(action.userName, action.password)
       LogoutAction -> logout()
       is ChangePasswordAction -> changePassword(action.currentPassword, action.newPassword)
       ShowPasswordChangeAction -> showChangePasswordDialog()
     }
   }
 
-  private fun login(credentials: InputCredentials) {
+  private fun login(userName: String, password: String) {
     viewModelScope.launch {
       val result =
-          when (val info = api.login(credentials)) {
-            is ApiResult.Error -> WrongCredentials(credentials, info.message)
-            is Success<UserInfoDto> -> info.toCredentials(credentials)
-            Unprivileged -> WrongCredentials(credentials, "Invalid user name or password.")
+          when (val info = api.login(HttpCredentials(userName, password))) {
+            is ApiResult.Error -> WrongCredentials(info.message)
+            is Success<UserInfoDto> -> info.toUserInfo(userName)
+            Unprivileged -> WrongCredentials("Invalid user name or password.")
           }
-      // TODO do we need to keep the password here? Should be enough to keep them in HttpClient
       state.update { it.copy(credentials = result) }
     }
   }
@@ -104,8 +103,22 @@ data class UserAccountState(
     get() = credentials as UserInfo
 }
 
+sealed interface Credentials {
+  object NoCredentials : Credentials
+
+  data class WrongCredentials(val message: String) : Credentials
+
+  data class UserInfo(val name: String, val role: UserRole) : Credentials
+}
+
+enum class UserRole {
+  NONE,
+  USER,
+  ADMIN,
+}
+
 sealed interface UserAccountAction {
-  data class LoginAction(val credentials: InputCredentials) : UserAccountAction
+  data class LoginAction(val userName: String, val password: String) : UserAccountAction
 
   object LogoutAction : UserAccountAction
 
@@ -114,3 +127,13 @@ sealed interface UserAccountAction {
   data class ChangePasswordAction(val currentPassword: String, val newPassword: String) :
       UserAccountAction
 }
+
+private fun Success<UserInfoDto>.toUserInfo(userName: String) =
+    UserInfo(userName, data.role.toRole())
+
+private fun UserRoleDto.toRole() =
+    when (this) {
+      UserRoleDto.ADMIN -> UserRole.ADMIN
+      UserRoleDto.USER -> UserRole.USER
+      UserRoleDto.NONE -> UserRole.NONE
+    }

@@ -14,10 +14,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
+import de.dagadeta.inventorytracking.frontend.UserRole.ADMIN
+import de.dagadeta.inventorytracking.frontend.UserRole.USER
 import de.dagadeta.inventorytracking.frontend.http.API
-import de.dagadeta.inventorytracking.frontend.http.UserRole
-import de.dagadeta.inventorytracking.frontend.http.UserRole.ADMIN
-import de.dagadeta.inventorytracking.frontend.http.UserRole.USER
 import inventory_tracking.frontend.shared.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource

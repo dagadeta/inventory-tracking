@@ -5,8 +5,9 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.SemanticsMatcher.Companion.expectValue
 import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.text.AnnotatedString
-import de.dagadeta.inventorytracking.frontend.http.Credentials.*
-import de.dagadeta.inventorytracking.frontend.http.UserRole.USER
+import de.dagadeta.inventorytracking.frontend.Credentials.NoCredentials
+import de.dagadeta.inventorytracking.frontend.Credentials.WrongCredentials
+import de.dagadeta.inventorytracking.frontend.UserAccountAction.LoginAction
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 
@@ -27,16 +28,16 @@ class LoginTest {
   }
 
   @Test
-  fun `text fields show input user name and hidden password`() = runComposeUiTest {
+  fun `even when credentials are known, text fields are initially empty`() = runComposeUiTest {
     setContent {
       Login(
           onAction = {},
-          credentials = InputCredentials("Karl", "Klammer"),
+          credentials = userHans,
       )
     }
 
-    onNodeWithTag(userNameTag).assert(expectValue(EditableText, AnnotatedString("Karl")))
-    onNodeWithTag(passwordTag).assert(expectValue(EditableText, AnnotatedString("•••••••")))
+    onNodeWithTag(userNameTag).assert(expectValue(EditableText, AnnotatedString("")))
+    onNodeWithTag(passwordTag).assert(expectValue(EditableText, AnnotatedString("")))
     onNodeWithTag(hintTextTag).assertDoesNotExist()
   }
 
@@ -45,38 +46,36 @@ class LoginTest {
     setContent {
       Login(
           onAction = {},
-          credentials = WrongCredentials(InputCredentials("Kurt", "Cobain"), "wrong!"),
+          credentials = WrongCredentials("wrong!"),
       )
     }
 
-    onNodeWithTag(userNameTag).assert(expectValue(EditableText, AnnotatedString("Kurt")))
-    onNodeWithTag(passwordTag).assert(expectValue(EditableText, AnnotatedString("••••••")))
+    onNodeWithTag(userNameTag).assert(expectValue(EditableText, AnnotatedString("")))
+    onNodeWithTag(passwordTag).assert(expectValue(EditableText, AnnotatedString("")))
     onNodeWithTag(hintTextTag).assertTextEquals("wrong!")
   }
 
   @Test
-  fun `text fields show user name and hidden password from UserInfo`() = runComposeUiTest {
-    // under normal circumstances, this should not happen
-    // but the data model does not forbid it, and we should test expected behavior
+  fun `the entered password is hidden`() = runComposeUiTest {
     setContent {
       Login(
           onAction = {},
-          credentials = UserInfo(InputCredentials("Karl", "Klammer"), USER),
+          credentials = userHans,
       )
     }
 
-    onNodeWithTag(userNameTag).assert(expectValue(EditableText, AnnotatedString("Karl")))
-    onNodeWithTag(passwordTag).assert(expectValue(EditableText, AnnotatedString("•••••••")))
+    onNodeWithTag(passwordTag).performTextInput("secret")
+    onNodeWithTag(passwordTag).assert(expectValue(EditableText, AnnotatedString("••••••")))
     onNodeWithTag(hintTextTag).assertDoesNotExist()
   }
 
   @Test
   fun `login button calls onLoginClick with input credentials`() = runComposeUiTest {
-    var inputCredentials: InputCredentials? = null
+    lateinit var action: LoginAction
     setContent {
       Login(
-          onAction = { inputCredentials = it.credentials },
-          credentials = InputCredentials("", ""),
+          onAction = { action = it },
+          credentials = NoCredentials,
       )
     }
 
@@ -84,6 +83,6 @@ class LoginTest {
     onNodeWithTag(passwordTag).performTextInput("Klammer")
     onNodeWithTag(loginButtonTag).performClick()
 
-    inputCredentials shouldBe InputCredentials("Karl", "Klammer")
+    action shouldBe LoginAction("Karl", "Klammer")
   }
 }
