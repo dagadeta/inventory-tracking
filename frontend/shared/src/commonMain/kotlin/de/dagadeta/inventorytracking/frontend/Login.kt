@@ -19,6 +19,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.dagadeta.inventorytracking.frontend.UserAccountAction.LoginAction
 import de.dagadeta.inventorytracking.frontend.http.Credentials
 import de.dagadeta.inventorytracking.frontend.http.Credentials.*
 
@@ -29,7 +30,7 @@ const val hintTextTag = "hint-text"
 
 @Composable
 fun Login(
-    onLoginClick: (InputCredentials) -> Unit,
+    onAction: (LoginAction) -> Unit,
     credentials: Credentials,
 ) {
   var userName by remember { mutableStateOf(credentials.userName) }
@@ -75,7 +76,7 @@ fun Login(
             ),
         keyboardActions =
             KeyboardActions(
-                onDone = { onLoginClick(InputCredentials(userName, password)) },
+                onDone = { onAction(LoginAction(InputCredentials(userName, password))) },
             ),
         modifier = Modifier.fillMaxWidth().testTag(passwordTag),
     )
@@ -83,7 +84,7 @@ fun Login(
     Spacer(modifier = Modifier.height(32.dp))
 
     Button(
-        onClick = { onLoginClick(InputCredentials(userName, password)) },
+        onClick = { onAction(LoginAction(InputCredentials(userName, password))) },
         modifier = Modifier.fillMaxWidth().testTag(loginButtonTag),
     ) {
       Text(text = "Log in")

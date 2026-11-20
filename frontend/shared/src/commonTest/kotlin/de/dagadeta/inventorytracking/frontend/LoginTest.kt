@@ -16,7 +16,7 @@ class LoginTest {
   fun `with empty credentials, text fields are empty`() = runComposeUiTest {
     setContent {
       Login(
-          onLoginClick = {},
+          onAction = {},
           credentials = NoCredentials,
       )
     }
@@ -30,7 +30,7 @@ class LoginTest {
   fun `text fields show input user name and hidden password`() = runComposeUiTest {
     setContent {
       Login(
-          onLoginClick = {},
+          onAction = {},
           credentials = InputCredentials("Karl", "Klammer"),
       )
     }
@@ -44,7 +44,7 @@ class LoginTest {
   fun `wrong credentials produce a hint text`() = runComposeUiTest {
     setContent {
       Login(
-          onLoginClick = {},
+          onAction = {},
           credentials = WrongCredentials(InputCredentials("Kurt", "Cobain"), "wrong!"),
       )
     }
@@ -60,7 +60,7 @@ class LoginTest {
     // but the data model does not forbid it, and we should test expected behavior
     setContent {
       Login(
-          onLoginClick = {},
+          onAction = {},
           credentials = UserInfo(InputCredentials("Karl", "Klammer"), USER),
       )
     }
@@ -75,7 +75,7 @@ class LoginTest {
     var inputCredentials: InputCredentials? = null
     setContent {
       Login(
-          onLoginClick = { inputCredentials = it },
+          onAction = { inputCredentials = it.credentials },
           credentials = InputCredentials("", ""),
       )
     }

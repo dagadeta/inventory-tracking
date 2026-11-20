@@ -13,9 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import de.dagadeta.inventorytracking.frontend.UserAccountAction.LoginAction
 import de.dagadeta.inventorytracking.frontend.http.API
-import de.dagadeta.inventorytracking.frontend.http.Credentials.UserInfo
 import de.dagadeta.inventorytracking.frontend.http.HttpAPI
 import de.dagadeta.inventorytracking.frontend.http.fakeAPI
 import de.dagadeta.inventorytracking.frontend.theme.AppTheme
@@ -27,8 +25,8 @@ import de.dagadeta.inventorytracking.frontend.theme.AppTheme
 @Composable
 fun ConnectedApp(
     api: API,
+    userAccountViewModel: UserAccountViewModel = viewModel { UserAccountViewModel(api) },
 ) {
-  val userAccountViewModel = viewModel { UserAccountViewModel(api) }
   val userAccountState by userAccountViewModel.state.collectAsState()
 
   AppTheme {
@@ -39,7 +37,7 @@ fun ConnectedApp(
       if (!userAccountState.isLoggedIn) {
         Login(
             credentials = userAccountState.credentials,
-            onLoginClick = { userAccountViewModel.onAction(LoginAction(it)) },
+            onAction = userAccountViewModel::onAction,
         )
       } else {
         Column(
@@ -51,8 +49,8 @@ fun ConnectedApp(
         ) {
           MainAppNavigation(
               api = api,
-              role = (userAccountState.credentials as UserInfo).role,
-              userAccountViewModel = userAccountViewModel,
+              userAccountState = userAccountState,
+              onAction = userAccountViewModel::onAction,
           )
         }
       }
