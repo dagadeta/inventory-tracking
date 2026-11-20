@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -12,16 +12,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import de.dagadeta.inventorytracking.common.model.ChangePasswordResponseDto
-import de.dagadeta.inventorytracking.common.model.PasswordChangeResult.SUCCESS
-import de.dagadeta.inventorytracking.common.model.PasswordChangeResult.WRONG_PASSWORD
-import de.dagadeta.inventorytracking.common.model.UserInfoDto
-import de.dagadeta.inventorytracking.common.model.UserInfoDto.Companion.NO_USER
-import de.dagadeta.inventorytracking.frontend.http.ApiResult
-import de.dagadeta.inventorytracking.frontend.http.ApiResult.*
-import kotlinx.coroutines.launch
-
-private data class Texts(val info: String = "", val error: String = "")
+import de.dagadeta.inventorytracking.frontend.UserAccountAction.*
 
 const val accountHeaderTag = "account-header"
 const val userRoleTag = "user-role"
@@ -33,36 +24,10 @@ const val logoutButtonTag = "logout-button"
 
 @Composable
 fun UserAccount(
-    loadUserInfo: suspend () -> ApiResult<UserInfoDto>,
-    changePassword:
-        suspend (oldPassword: String, newPassword: String) -> ApiResult<ChangePasswordResponseDto>,
-    logout: () -> Unit,
+    state: UserAccountState,
+    onAction: (UserAccountAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-  val coroutineScope = rememberCoroutineScope()
-  var userInfo by remember { mutableStateOf(NO_USER) }
-  var texts by remember { mutableStateOf(Texts()) }
-  var passwordChangeDialogOpen by remember { mutableStateOf(false) }
-
-  LaunchedEffect(true) {
-    when (val result = loadUserInfo()) {
-      is Success -> {
-        userInfo = result.data
-        texts = Texts()
-      }
-
-      is Error -> {
-        userInfo = NO_USER
-        texts = Texts(error = result.message)
-      }
-
-      Unprivileged -> {
-        userInfo = NO_USER
-        texts = Texts(error = "You are not authorized to load user info for this account.")
-      }
-    }
-  }
-
   Column(
       horizontalAlignment = Alignment.CenterHorizontally,
       modifier = modifier.padding(horizontal = 16.dp).testTag(listColumnTag),
@@ -76,74 +41,49 @@ fun UserAccount(
     )
 
     Text(
-        text = "Name: ${userInfo.name}",
+        text = "Name: ${state.userInfo.inputCredentials.userName}",
         modifier = Modifier.testTag(userNameTag),
     )
     Text(
-        text = "Role: ${userInfo.role}",
+        text = "Role: ${state.userInfo.role}",
         modifier = Modifier.testTag(userRoleTag),
     )
 
-    if (passwordChangeDialogOpen) {
+    if (state.showPasswordChangeDialog) {
       ChangePassword(
-          onSubmitClick = { newPassword, newPasswordRepeated ->
-            coroutineScope.launch {
-              when (val result = changePassword(newPassword, newPasswordRepeated)) {
-                is Error -> {
-                  texts = Texts(error = result.message)
-                }
-
-                is Success<ChangePasswordResponseDto> -> {
-                  when (result.data.result) {
-                    SUCCESS -> {
-                      texts = Texts("Password changed successfully!")
-                      passwordChangeDialogOpen = false
-                    }
-
-                    WRONG_PASSWORD -> texts = Texts(error = "Current password is wrong!")
-                  }
-                }
-
-                Unprivileged -> {
-                  texts =
-                      Texts(error = "You are not authorized to change password for this account.")
-                }
-              }
-            }
+          onSubmitClick = { currentPassword, newPassword ->
+            onAction(ChangePasswordAction(currentPassword, newPassword))
           },
           modifier = Modifier.fillMaxWidth().testTag(changePasswordComposableTag),
       )
     } else {
       Spacer(modifier = Modifier.height(16.dp))
       Button(
-          onClick = {
-            texts = Texts()
-            passwordChangeDialogOpen = true
-          },
+          onClick = { onAction(ShowPasswordChangeAction) },
           modifier = Modifier.testTag(changePasswordButtonTag),
       ) {
         Text("Change password")
       }
     }
-    if (texts.info.isNotEmpty()) {
+    if (state.infoText.isNotEmpty()) {
       Spacer(modifier = Modifier.height(16.dp))
       Text(
-          text = texts.info,
+          text = state.infoText,
           color = MaterialTheme.colorScheme.secondary,
           modifier = Modifier.testTag(infoTextTag),
       )
     }
-    if (texts.error.isNotEmpty()) {
+    if (state.errorText.isNotEmpty()) {
       Spacer(modifier = Modifier.height(16.dp))
       Text(
-          text = texts.error,
+          text = state.errorText,
           color = MaterialTheme.colorScheme.error,
           modifier = Modifier.testTag(errorTextTag),
       )
     }
     Spacer(modifier = Modifier.height(16.dp))
     Button(
-        onClick = { logout() },
+        onClick = { onAction(LogoutAction) },
         modifier = Modifier.testTag(logoutButtonTag),
     ) {
       Text("Logout")

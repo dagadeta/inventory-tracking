@@ -15,8 +15,6 @@ interface API {
 
   fun logout()
 
-  suspend fun fetchUserInfo(): ApiResult<UserInfoDto>
-
   suspend fun changePassword(
       currentPassword: String,
       newPassword: String,
@@ -41,10 +39,6 @@ class HttpAPI : API {
   override fun logout() {
     client = httpClient(EMPTY_CREDENTIALS)
     userName = ""
-  }
-
-  override suspend fun fetchUserInfo(): ApiResult<UserInfoDto> = safeApiCall {
-    client.get("$backendUrl${UserInfoDto.ENDPOINT}")
   }
 
   override suspend fun changePassword(
@@ -78,12 +72,9 @@ class HttpAPI : API {
 val fakeAPI: API =
     object : API {
       override suspend fun login(credentials: InputCredentials): ApiResult<UserInfoDto> =
-          Success(UserInfoDto(1, "admin", ADMIN))
+          Success(UserInfoDto(1, credentials.userName, ADMIN))
 
       override fun logout() {}
-
-      override suspend fun fetchUserInfo(): ApiResult<UserInfoDto> =
-          Success(UserInfoDto(1, "admin", ADMIN))
 
       override suspend fun changePassword(
           currentPassword: String,
