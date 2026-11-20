@@ -41,7 +41,7 @@ fun UserAccount(
     )
 
     Text(
-        text = "Name: ${state.userInfo.inputCredentials.userName}",
+        text = "Name: ${state.userInfo.name}",
         modifier = Modifier.testTag(userNameTag),
     )
     Text(

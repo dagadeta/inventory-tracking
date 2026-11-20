@@ -1,9 +1,8 @@
 package de.dagadeta.inventorytracking.frontend
 
-import de.dagadeta.inventorytracking.frontend.http.Credentials.InputCredentials
-import de.dagadeta.inventorytracking.frontend.http.Credentials.UserInfo
-import de.dagadeta.inventorytracking.frontend.http.UserRole.ADMIN
-import de.dagadeta.inventorytracking.frontend.http.UserRole.USER
+import de.dagadeta.inventorytracking.frontend.Credentials.UserInfo
+import de.dagadeta.inventorytracking.frontend.UserRole.ADMIN
+import de.dagadeta.inventorytracking.frontend.UserRole.USER
 
-val userHans = UserInfo(InputCredentials("Hans", ""), USER)
-val admin = UserInfo(InputCredentials("Admin", ""), ADMIN)
+val userHans = UserInfo("Hans", USER)
+val admin = UserInfo("Admin", ADMIN)
