@@ -1,8 +1,8 @@
 package de.dagadeta.inventorytracking.frontend
 
-import de.dagadeta.inventorytracking.frontend.Credentials.UserInfo
-import de.dagadeta.inventorytracking.frontend.UserRole.ADMIN
-import de.dagadeta.inventorytracking.frontend.UserRole.USER
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.Credentials.UserInfo
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserRole.ADMIN
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserRole.USER
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlinx.coroutines.Dispatchers

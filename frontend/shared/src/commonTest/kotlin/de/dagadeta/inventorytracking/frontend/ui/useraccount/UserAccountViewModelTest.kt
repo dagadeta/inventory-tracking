@@ -1,17 +1,18 @@
-package de.dagadeta.inventorytracking.frontend
+package de.dagadeta.inventorytracking.frontend.ui.useraccount
 
 import de.dagadeta.inventorytracking.common.model.ChangePasswordResponseDto
 import de.dagadeta.inventorytracking.common.model.PasswordChangeResult.SUCCESS
 import de.dagadeta.inventorytracking.common.model.PasswordChangeResult.WRONG_PASSWORD
 import de.dagadeta.inventorytracking.common.model.UserInfoDto
 import de.dagadeta.inventorytracking.common.model.UserRoleDto.USER
-import de.dagadeta.inventorytracking.frontend.Credentials.*
-import de.dagadeta.inventorytracking.frontend.UserAccountAction.*
+import de.dagadeta.inventorytracking.frontend.MainDispatcherTest
 import de.dagadeta.inventorytracking.frontend.http.API
 import de.dagadeta.inventorytracking.frontend.http.ApiResult
 import de.dagadeta.inventorytracking.frontend.http.ApiResult.Success
 import de.dagadeta.inventorytracking.frontend.http.ApiResult.Unprivileged
 import de.dagadeta.inventorytracking.frontend.http.HttpCredentials
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.Credentials.*
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountAction.*
 import dev.mokkery.*
 import dev.mokkery.answering.returns
 import dev.mokkery.matcher.any

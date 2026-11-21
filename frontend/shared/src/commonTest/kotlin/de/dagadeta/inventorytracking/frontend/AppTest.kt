@@ -6,6 +6,10 @@ import androidx.compose.ui.test.SemanticsMatcher.Companion.expectValue
 import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.text.AnnotatedString
 import de.dagadeta.inventorytracking.frontend.http.fakeAPI
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.loginButtonTag
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.logoutButtonTag
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.passwordTag
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.userNameTag
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)

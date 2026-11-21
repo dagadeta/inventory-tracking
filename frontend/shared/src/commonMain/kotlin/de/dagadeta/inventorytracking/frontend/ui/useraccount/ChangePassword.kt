@@ -1,4 +1,4 @@
-package de.dagadeta.inventorytracking.frontend
+package de.dagadeta.inventorytracking.frontend.ui.useraccount
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

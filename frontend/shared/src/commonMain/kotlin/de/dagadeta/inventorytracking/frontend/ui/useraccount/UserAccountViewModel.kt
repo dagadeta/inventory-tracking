@@ -1,4 +1,4 @@
-package de.dagadeta.inventorytracking.frontend
+package de.dagadeta.inventorytracking.frontend.ui.useraccount
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,13 +7,13 @@ import de.dagadeta.inventorytracking.common.model.PasswordChangeResult.SUCCESS
 import de.dagadeta.inventorytracking.common.model.PasswordChangeResult.WRONG_PASSWORD
 import de.dagadeta.inventorytracking.common.model.UserInfoDto
 import de.dagadeta.inventorytracking.common.model.UserRoleDto
-import de.dagadeta.inventorytracking.frontend.Credentials.*
-import de.dagadeta.inventorytracking.frontend.UserAccountAction.*
 import de.dagadeta.inventorytracking.frontend.http.API
 import de.dagadeta.inventorytracking.frontend.http.ApiResult
 import de.dagadeta.inventorytracking.frontend.http.ApiResult.Success
 import de.dagadeta.inventorytracking.frontend.http.ApiResult.Unprivileged
 import de.dagadeta.inventorytracking.frontend.http.HttpCredentials
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.Credentials.*
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountAction.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update

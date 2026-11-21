@@ -14,9 +14,13 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
-import de.dagadeta.inventorytracking.frontend.UserRole.ADMIN
-import de.dagadeta.inventorytracking.frontend.UserRole.USER
 import de.dagadeta.inventorytracking.frontend.http.API
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountAction
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountScreen
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountState
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserRole
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserRole.ADMIN
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserRole.USER
 import inventory_tracking.frontend.shared.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -79,7 +83,7 @@ fun MainAppNavigation(
               unselectedIcon = painterResource(Res.drawable.account),
               minRole = USER,
               content = {
-                UserAccount(
+                UserAccountScreen(
                     userAccountState,
                     onAction,
                     modifier = Modifier.testTag(userAccountTag),

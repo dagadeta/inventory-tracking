@@ -1,8 +1,9 @@
-package de.dagadeta.inventorytracking.frontend
+package de.dagadeta.inventorytracking.frontend.ui.useraccount
 
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.v2.runComposeUiTest
-import de.dagadeta.inventorytracking.frontend.UserAccountAction.*
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountAction.*
+import de.dagadeta.inventorytracking.frontend.userHans
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 import kotlinx.coroutines.test.TestResult
@@ -14,7 +15,7 @@ class UserAccountTest {
   fun `per default, shows user info & the password change dialog is not shown`(): TestResult {
     return runComposeUiTest {
       setContent {
-        UserAccount(
+        UserAccountScreen(
             UserAccountState(userHans),
             {},
         )
@@ -36,7 +37,7 @@ class UserAccountTest {
   fun `password change button calls onAction`() = runComposeUiTest {
     lateinit var action: UserAccountAction
     setContent {
-      UserAccount(
+      UserAccountScreen(
           UserAccountState(userHans),
           { action = it },
       )
@@ -51,7 +52,7 @@ class UserAccountTest {
   fun `shows password change dialog, submit calls onAction`() = runComposeUiTest {
     lateinit var action: UserAccountAction
     setContent {
-      UserAccount(
+      UserAccountScreen(
           UserAccountState(
               credentials = userHans,
               showPasswordChangeDialog = true,
@@ -74,7 +75,7 @@ class UserAccountTest {
   @Test
   fun `shows info and error text`() = runComposeUiTest {
     setContent {
-      UserAccount(
+      UserAccountScreen(
           UserAccountState(
               credentials = userHans,
               infoText = "Password changed successfully!",
@@ -92,7 +93,7 @@ class UserAccountTest {
   fun `logout button calls logout action`() = runComposeUiTest {
     lateinit var action: UserAccountAction
     setContent {
-      UserAccount(
+      UserAccountScreen(
           UserAccountState(userHans),
           { action = it },
       )

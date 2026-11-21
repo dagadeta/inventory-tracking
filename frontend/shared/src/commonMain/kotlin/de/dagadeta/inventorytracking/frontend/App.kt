@@ -17,6 +17,8 @@ import de.dagadeta.inventorytracking.frontend.http.API
 import de.dagadeta.inventorytracking.frontend.http.HttpAPI
 import de.dagadeta.inventorytracking.frontend.http.fakeAPI
 import de.dagadeta.inventorytracking.frontend.theme.AppTheme
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.Login
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountViewModel
 
 @Composable fun App() = ConnectedApp(HttpAPI())
 
