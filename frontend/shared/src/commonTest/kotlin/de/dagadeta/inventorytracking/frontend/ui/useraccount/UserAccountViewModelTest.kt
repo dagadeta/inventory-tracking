@@ -8,8 +8,7 @@ import de.dagadeta.inventorytracking.common.model.UserRoleDto.USER
 import de.dagadeta.inventorytracking.frontend.MainDispatcherTest
 import de.dagadeta.inventorytracking.frontend.http.API
 import de.dagadeta.inventorytracking.frontend.http.ApiResult
-import de.dagadeta.inventorytracking.frontend.http.ApiResult.Success
-import de.dagadeta.inventorytracking.frontend.http.ApiResult.Unprivileged
+import de.dagadeta.inventorytracking.frontend.http.ApiResult.*
 import de.dagadeta.inventorytracking.frontend.http.HttpCredentials
 import de.dagadeta.inventorytracking.frontend.ui.useraccount.Credentials.*
 import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountAction.*
@@ -47,23 +46,23 @@ class UserAccountViewModelTest : MainDispatcherTest(), MokkerySuiteScope {
   }
 
   @Test
-  fun `tha LoginAction with successful login emits UserInfo`() =
+  fun `the LoginAction with successful login emits UserInfo`() =
       loginTest(
           Success(UserInfoDto(1, "Name", USER)),
           UserInfo("Name", UserRole.USER),
       )
 
   @Test
-  fun `tha LoginAction with wrong credentials emits an ErrorMessage`() =
+  fun `the LoginAction with wrong credentials emits an ErrorMessage`() =
       loginTest(
           Unprivileged,
           ErrorMessage("Invalid user name or password."),
       )
 
   @Test
-  fun `tha LoginAction with a backend error emits an ErrorMessage`() =
+  fun `the LoginAction with a backend error emits an ErrorMessage`() =
       loginTest(
-          ApiResult.Error("message", 42),
+          Error("message", 42),
           ErrorMessage("message"),
       )
 
@@ -128,7 +127,7 @@ class UserAccountViewModelTest : MainDispatcherTest(), MokkerySuiteScope {
   @Test
   fun `the ChangePasswordAction with backend error emits an errorText`() =
       changePasswordTest(
-          changePasswordResult = ApiResult.Error("sth. went wrong!", 7),
+          changePasswordResult = Error("sth. went wrong!", 7),
           expectedStage =
               UserAccountState(
                   errorText = "sth. went wrong!",

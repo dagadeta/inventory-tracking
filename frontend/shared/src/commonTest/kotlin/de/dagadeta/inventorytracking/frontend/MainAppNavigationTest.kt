@@ -7,7 +7,9 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
+import de.dagadeta.inventorytracking.frontend.ui.inventory.InventoryState
 import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountState
+import de.dagadeta.inventorytracking.frontend.ui.users.UsersState
 import kotlin.test.Test
 import kotlinx.coroutines.test.TestResult
 
@@ -19,8 +21,11 @@ class MainAppNavigationTest {
     return runComposeUiTest {
       setContent {
         MainAppNavigation(
-            fakeAPI,
             UserAccountState(userHans),
+            {},
+            InventoryState(),
+            {},
+            UsersState(),
             {},
         )
       }
@@ -37,8 +42,11 @@ class MainAppNavigationTest {
   fun `can switch between list items`() = runComposeUiTest {
     setContent {
       MainAppNavigation(
-          fakeAPI,
           UserAccountState(admin),
+          {},
+          InventoryState(),
+          {},
+          UsersState(),
           {},
       )
     }
@@ -70,8 +78,11 @@ class MainAppNavigationTest {
   fun `admin users see all navigation items`() = runComposeUiTest {
     setContent {
       MainAppNavigation(
-          fakeAPI,
           UserAccountState(admin),
+          {},
+          InventoryState(),
+          {},
+          UsersState(),
           {},
       )
     }
@@ -85,8 +96,11 @@ class MainAppNavigationTest {
   fun `non-admin users don't see the users item`() = runComposeUiTest {
     setContent {
       MainAppNavigation(
-          fakeAPI,
           UserAccountState(userHans),
+          {},
+          InventoryState(),
+          {},
+          UsersState(),
           {},
       )
     }

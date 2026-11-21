@@ -1,42 +1,44 @@
 package de.dagadeta.inventorytracking.frontend
 
+import androidx.compose.material3.Text
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.v2.runComposeUiTest
-import de.dagadeta.inventorytracking.common.model.InventoryItemDto
-import de.dagadeta.inventorytracking.common.model.PageDto
-import de.dagadeta.inventorytracking.frontend.http.ApiResult
+import de.dagadeta.inventorytracking.frontend.ui.inventory.InventoryItem
+import de.dagadeta.inventorytracking.frontend.ui.users.Page
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
 class PageableListTest {
 
   @Test
-  fun `renders the fetchItems result using describeItem`() = runComposeUiTest {
+  fun `renders the items using itemContent`() = runComposeUiTest {
     setContent {
       PageableList(
           header = "Header",
-          fetchItems = { fakeAPI.fetchInventoryItems() },
-          describeItem = { "${it.name}: ${it.totalAmount}" },
+          loadItems = {},
+          items = Page(listOf(InventoryItem(1, "item-1", 3, 2, 1))),
+          error = "",
+          itemContent = { Text("${it.name}: ${it.totalAmount}") },
       )
     }
 
     val rows = onNodeWithTag(listColumnTag).onChildren()
     rows[0].assertTextEquals("Header")
-    rows[1].assertTextEquals("item-1: 1")
+    rows[1].assertTextEquals("item-1: 3")
   }
 
   @Test
-  fun `renders an error if fetchItems fails`() = runComposeUiTest {
+  fun `renders an error`() = runComposeUiTest {
     setContent {
       PageableList(
           header = "Header",
-          fetchItems = {
-            ApiResult.Error("error message", 42) as ApiResult<PageDto<InventoryItemDto>>
-          },
-          describeItem = { "${it.name}: ${it.totalAmount}" },
+          loadItems = {},
+          items = Page<InventoryItem>(),
+          error = "error message (42)",
+          itemContent = { Text("${it.name}: ${it.totalAmount}") },
       )
     }
 

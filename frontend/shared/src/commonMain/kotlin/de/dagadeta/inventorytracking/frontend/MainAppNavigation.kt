@@ -14,15 +14,18 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
-import de.dagadeta.inventorytracking.frontend.http.API
+import de.dagadeta.inventorytracking.frontend.ui.inventory.InventoryAction
 import de.dagadeta.inventorytracking.frontend.ui.inventory.InventoryScreen
+import de.dagadeta.inventorytracking.frontend.ui.inventory.InventoryState
 import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountAction
 import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountScreen
 import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountState
 import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserRole
 import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserRole.ADMIN
 import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserRole.USER
+import de.dagadeta.inventorytracking.frontend.ui.users.UsersAction
 import de.dagadeta.inventorytracking.frontend.ui.users.UsersScreen
+import de.dagadeta.inventorytracking.frontend.ui.users.UsersState
 import inventory_tracking.frontend.shared.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -42,9 +45,12 @@ private data class NavItem(
 
 @Composable
 fun MainAppNavigation(
-    api: API,
     userAccountState: UserAccountState,
-    onAction: (UserAccountAction) -> Unit,
+    onUserAccountAction: (UserAccountAction) -> Unit,
+    inventoryState: InventoryState,
+    onInventoryAction: (InventoryAction) -> Unit,
+    usersState: UsersState,
+    onUsersAction: (UsersAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
   val allNavItems =
@@ -56,7 +62,8 @@ fun MainAppNavigation(
               minRole = USER,
               content = {
                 InventoryScreen(
-                    api = api,
+                    inventoryState,
+                    onInventoryAction,
                     modifier = Modifier.testTag(inventoryListTag),
                 )
               },
@@ -68,7 +75,8 @@ fun MainAppNavigation(
               minRole = ADMIN,
               content = {
                 UsersScreen(
-                    api = api,
+                    usersState,
+                    onUsersAction,
                     modifier = Modifier.testTag(usersListTag),
                 )
               },
@@ -81,7 +89,7 @@ fun MainAppNavigation(
               content = {
                 UserAccountScreen(
                     userAccountState,
-                    onAction,
+                    onUserAccountAction,
                     modifier = Modifier.testTag(userAccountTag),
                 )
               },

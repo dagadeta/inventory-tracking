@@ -131,7 +131,7 @@ sealed interface UserAccountAction {
 private fun Success<UserInfoDto>.toUserInfo(userName: String) =
     UserInfo(userName, data.role.toRole())
 
-private fun UserRoleDto.toRole() =
+fun UserRoleDto.toRole() =
     when (this) {
       UserRoleDto.ADMIN -> UserRole.ADMIN
       UserRoleDto.USER -> UserRole.USER
