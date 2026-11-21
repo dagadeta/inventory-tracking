@@ -19,8 +19,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import de.dagadeta.inventorytracking.frontend.http.Credentials
-import de.dagadeta.inventorytracking.frontend.http.Credentials.*
+import de.dagadeta.inventorytracking.frontend.Credentials.WrongCredentials
+import de.dagadeta.inventorytracking.frontend.UserAccountAction.LoginAction
 
 const val userNameTag = "user-name"
 const val passwordTag = "password"
@@ -29,11 +29,11 @@ const val hintTextTag = "hint-text"
 
 @Composable
 fun Login(
-    onLoginClick: (InputCredentials) -> Unit,
+    onAction: (LoginAction) -> Unit,
     credentials: Credentials,
 ) {
-  var userName by remember { mutableStateOf(credentials.userName) }
-  var password by remember { mutableStateOf(credentials.password) }
+  var userName by remember { mutableStateOf("") }
+  var password by remember { mutableStateOf("") }
 
   Column(
       modifier = Modifier.padding(horizontal = 16.dp),
@@ -57,10 +57,6 @@ fun Login(
                 keyboardType = PersonName,
                 imeAction = Next,
             ),
-        keyboardActions =
-            KeyboardActions(
-                onDone = { onLoginClick(InputCredentials(userName, password)) },
-            ),
         modifier = Modifier.fillMaxWidth().testTag(userNameTag),
     )
 
@@ -79,7 +75,7 @@ fun Login(
             ),
         keyboardActions =
             KeyboardActions(
-                onDone = { onLoginClick(InputCredentials(userName, password)) },
+                onDone = { onAction(LoginAction(userName, password)) },
             ),
         modifier = Modifier.fillMaxWidth().testTag(passwordTag),
     )
@@ -87,7 +83,7 @@ fun Login(
     Spacer(modifier = Modifier.height(32.dp))
 
     Button(
-        onClick = { onLoginClick(InputCredentials(userName, password)) },
+        onClick = { onAction(LoginAction(userName, password)) },
         modifier = Modifier.fillMaxWidth().testTag(loginButtonTag),
     ) {
       Text(text = "Log in")
@@ -104,21 +100,3 @@ fun Login(
     }
   }
 }
-
-private val Credentials.userName: String
-  get() =
-      when (this) {
-        is InputCredentials -> userName
-        NoCredentials -> ""
-        is UserInfo -> inputCredentials.userName
-        is WrongCredentials -> inputCredentials.userName
-      }
-
-private val Credentials.password: String
-  get() =
-      when (this) {
-        is InputCredentials -> password
-        NoCredentials -> ""
-        is UserInfo -> inputCredentials.password
-        is WrongCredentials -> inputCredentials.password
-      }

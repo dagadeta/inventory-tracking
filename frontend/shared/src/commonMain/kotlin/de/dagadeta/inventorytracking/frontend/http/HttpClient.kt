@@ -1,6 +1,5 @@
 package de.dagadeta.inventorytracking.frontend.http
 
-import de.dagadeta.inventorytracking.frontend.http.Credentials.InputCredentials
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -9,7 +8,7 @@ import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
-fun httpClient(credentials: InputCredentials) = HttpClient {
+fun httpClient(credentials: HttpCredentials) = HttpClient {
   expectSuccess = false
   install(ContentNegotiation) {
     json(
@@ -24,4 +23,10 @@ fun httpClient(credentials: InputCredentials) = HttpClient {
     logger = Logger.SIMPLE
   }
   defaultRequest { basicAuth(credentials.userName, credentials.password) }
+}
+
+data class HttpCredentials(val userName: String, val password: String) {
+  companion object {
+    val EMPTY_CREDENTIALS = HttpCredentials("", "")
+  }
 }

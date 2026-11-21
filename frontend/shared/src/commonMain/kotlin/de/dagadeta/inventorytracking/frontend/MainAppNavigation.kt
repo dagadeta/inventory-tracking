@@ -14,10 +14,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
+import de.dagadeta.inventorytracking.frontend.UserRole.ADMIN
+import de.dagadeta.inventorytracking.frontend.UserRole.USER
 import de.dagadeta.inventorytracking.frontend.http.API
-import de.dagadeta.inventorytracking.frontend.http.UserRole
-import de.dagadeta.inventorytracking.frontend.http.UserRole.ADMIN
-import de.dagadeta.inventorytracking.frontend.http.UserRole.USER
 import inventory_tracking.frontend.shared.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -38,8 +37,8 @@ private data class NavItem(
 @Composable
 fun MainAppNavigation(
     api: API,
-    role: UserRole,
-    logout: () -> Unit,
+    userAccountState: UserAccountState,
+    onAction: (UserAccountAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
   val allNavItems =
@@ -81,21 +80,19 @@ fun MainAppNavigation(
               minRole = USER,
               content = {
                 UserAccount(
-                    loadUserInfo = { api.fetchUserInfo() },
-                    changePassword = { current, new -> api.changePassword(current, new) },
-                    logout = { logout() },
+                    userAccountState,
+                    onAction,
                     modifier = Modifier.testTag(userAccountTag),
                 )
               },
           ),
       )
+  val shownNavItems = allNavItems.filter { userAccountState.userInfo.role >= it.minRole }
 
-  var selectedItem by rememberSaveable { mutableStateOf(allNavItems.first()) }
-
+  var selectedItem by rememberSaveable { mutableStateOf(shownNavItems.first()) }
   val state = rememberWideNavigationRailState()
   val scope = rememberCoroutineScope()
   val headerDescription = if (state.targetValue == Expanded) "Collapse rail" else "Expand rail"
-  val shownNavItems = allNavItems.filter { role >= it.minRole }
 
   Row(modifier = modifier.fillMaxWidth()) {
     WideNavigationRail(
