@@ -1,3 +1,4 @@
+import dev.mokkery.verify.VerifyMode.Companion.exhaustive
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
@@ -59,3 +60,8 @@ kotlin {
 }
 
 val isCiEnvironment = providers.environmentVariable("CI").isPresent
+
+mokkery {
+  // ensure every single call made to a mock is accounted for a verification block
+  defaultVerifyMode.set(exhaustive)
+}

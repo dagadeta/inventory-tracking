@@ -38,9 +38,9 @@ class UserAccountViewModel(
     viewModelScope.launch {
       val result =
           when (val info = api.login(HttpCredentials(userName, password))) {
-            is ApiResult.Error -> WrongCredentials(info.message)
+            is ApiResult.Error -> ErrorMessage(info.message)
             is Success<UserInfoDto> -> info.toUserInfo(userName)
-            Unprivileged -> WrongCredentials("Invalid user name or password.")
+            Unprivileged -> ErrorMessage("Invalid user name or password.")
           }
       state.update { it.copy(credentials = result) }
     }
@@ -106,7 +106,7 @@ data class UserAccountState(
 sealed interface Credentials {
   object NoCredentials : Credentials
 
-  data class WrongCredentials(val message: String) : Credentials
+  data class ErrorMessage(val message: String) : Credentials
 
   data class UserInfo(val name: String, val role: UserRole) : Credentials
 }

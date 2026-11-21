@@ -9,7 +9,7 @@ import de.dagadeta.inventorytracking.frontend.http.fakeAPI
 import kotlin.test.Test
 
 @OptIn(ExperimentalTestApi::class)
-class AppTest {
+class AppTest : MainDispatcherTest() {
   @Test
   fun `shows Login when no credentials are provided`() = runComposeUiTest {
     setContent { ConnectedApp(fakeAPI) }

@@ -7,13 +7,7 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
-import de.dagadeta.inventorytracking.common.model.PageDto.Companion.emptyPage
-import de.dagadeta.inventorytracking.frontend.http.API
-import de.dagadeta.inventorytracking.frontend.http.ApiResult.Success
 import de.dagadeta.inventorytracking.frontend.http.fakeAPI
-import dev.mokkery.answering.calls
-import dev.mokkery.everySuspend
-import dev.mokkery.mock
 import kotlin.test.Test
 import kotlinx.coroutines.test.TestResult
 
@@ -89,10 +83,9 @@ class MainAppNavigationTest {
 
   @Test
   fun `non-admin users don't see the users item`() = runComposeUiTest {
-    val api = mock<API> { everySuspend { fetchInventoryItems() } calls { Success(emptyPage()) } }
     setContent {
       MainAppNavigation(
-          api,
+          fakeAPI,
           UserAccountState(userHans),
           {},
       )

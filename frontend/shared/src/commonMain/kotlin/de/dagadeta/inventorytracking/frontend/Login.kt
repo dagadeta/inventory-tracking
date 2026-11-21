@@ -19,7 +19,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import de.dagadeta.inventorytracking.frontend.Credentials.WrongCredentials
+import de.dagadeta.inventorytracking.frontend.Credentials.ErrorMessage
 import de.dagadeta.inventorytracking.frontend.UserAccountAction.LoginAction
 
 const val userNameTag = "user-name"
@@ -91,7 +91,7 @@ fun Login(
 
     Spacer(modifier = Modifier.height(16.dp))
 
-    if (credentials is WrongCredentials) {
+    if (credentials is ErrorMessage) {
       Text(
           text = credentials.message,
           color = MaterialTheme.colorScheme.error,

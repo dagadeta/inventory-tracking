@@ -5,8 +5,8 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.SemanticsMatcher.Companion.expectValue
 import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.text.AnnotatedString
+import de.dagadeta.inventorytracking.frontend.Credentials.ErrorMessage
 import de.dagadeta.inventorytracking.frontend.Credentials.NoCredentials
-import de.dagadeta.inventorytracking.frontend.Credentials.WrongCredentials
 import de.dagadeta.inventorytracking.frontend.UserAccountAction.LoginAction
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
@@ -46,7 +46,7 @@ class LoginTest {
     setContent {
       Login(
           onAction = {},
-          credentials = WrongCredentials("wrong!"),
+          credentials = ErrorMessage("wrong!"),
       )
     }
 
