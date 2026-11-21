@@ -2,7 +2,6 @@ package de.dagadeta.inventorytracking.frontend.http
 
 import de.dagadeta.inventorytracking.common.model.*
 import de.dagadeta.inventorytracking.common.model.PasswordChangeResult.SUCCESS
-import de.dagadeta.inventorytracking.common.model.UserRoleDto.ADMIN
 import de.dagadeta.inventorytracking.frontend.http.ApiResult.Success
 import de.dagadeta.inventorytracking.frontend.http.HttpCredentials.Companion.EMPTY_CREDENTIALS
 import io.ktor.client.*
@@ -66,26 +65,3 @@ class HttpAPI : API {
     client.get("$backendUrl${UserDto.ENDPOINT}")
   }
 }
-
-// used for previews and tests
-val fakeAPI: API =
-    object : API {
-      override suspend fun login(credentials: HttpCredentials): ApiResult<UserInfoDto> =
-          Success(UserInfoDto(1, credentials.userName, ADMIN))
-
-      override fun logout() {}
-
-      override suspend fun changePassword(
-          currentPassword: String,
-          newPassword: String,
-      ): ApiResult<ChangePasswordResponseDto> = Success(ChangePasswordResponseDto(SUCCESS))
-
-      override suspend fun fetchInventoryItems(): ApiResult<PageDto<InventoryItemDto>> =
-          Success(pageOf(InventoryItemDto(1, "item-1", 1, 0, 1)))
-
-      override suspend fun fetchUsers(): ApiResult<PageDto<UserDto>> =
-          Success(pageOf(UserDto(1, "admin", ADMIN)))
-    }
-
-private fun <T> pageOf(vararg items: T) =
-    PageDto(items.toList(), PageDetailsDto(items.size, 1, items.size, 1))
