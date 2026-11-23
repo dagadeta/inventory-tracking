@@ -4,18 +4,15 @@ import de.dagadeta.inventorytracking.common.model.*
 import de.dagadeta.inventorytracking.common.model.PasswordChangeResult.SUCCESS
 import de.dagadeta.inventorytracking.common.model.UserRoleDto.ADMIN
 import de.dagadeta.inventorytracking.frontend.http.ApiResult.Success
-import de.dagadeta.inventorytracking.frontend.http.Credentials.InputCredentials
-import de.dagadeta.inventorytracking.frontend.http.Credentials.InputCredentials.Companion.EMPTY_CREDENTIALS
+import de.dagadeta.inventorytracking.frontend.http.HttpCredentials.Companion.EMPTY_CREDENTIALS
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 
 interface API {
-  suspend fun login(credentials: InputCredentials): ApiResult<UserInfoDto>
+  suspend fun login(credentials: HttpCredentials): ApiResult<UserInfoDto>
 
   fun logout()
-
-  suspend fun fetchUserInfo(): ApiResult<UserInfoDto>
 
   suspend fun changePassword(
       currentPassword: String,
@@ -32,7 +29,7 @@ class HttpAPI : API {
   private lateinit var client: HttpClient
   private lateinit var userName: String
 
-  override suspend fun login(credentials: InputCredentials): ApiResult<UserInfoDto> {
+  override suspend fun login(credentials: HttpCredentials): ApiResult<UserInfoDto> {
     client = httpClient(credentials)
     userName = credentials.userName
     return safeApiCall { client.get("$backendUrl${UserInfoDto.ENDPOINT}") }
@@ -41,10 +38,6 @@ class HttpAPI : API {
   override fun logout() {
     client = httpClient(EMPTY_CREDENTIALS)
     userName = ""
-  }
-
-  override suspend fun fetchUserInfo(): ApiResult<UserInfoDto> = safeApiCall {
-    client.get("$backendUrl${UserInfoDto.ENDPOINT}")
   }
 
   override suspend fun changePassword(
@@ -60,7 +53,7 @@ class HttpAPI : API {
         }
     if (response is Success && response.data.result == SUCCESS) {
       client.close()
-      client = httpClient(InputCredentials(userName, newPassword))
+      client = httpClient(HttpCredentials(userName, newPassword))
     }
     return response
   }
@@ -77,13 +70,10 @@ class HttpAPI : API {
 // used for previews and tests
 val fakeAPI: API =
     object : API {
-      override suspend fun login(credentials: InputCredentials): ApiResult<UserInfoDto> =
-          Success(UserInfoDto(1, "admin", ADMIN))
+      override suspend fun login(credentials: HttpCredentials): ApiResult<UserInfoDto> =
+          Success(UserInfoDto(1, credentials.userName, ADMIN))
 
       override fun logout() {}
-
-      override suspend fun fetchUserInfo(): ApiResult<UserInfoDto> =
-          Success(UserInfoDto(1, "admin", ADMIN))
 
       override suspend fun changePassword(
           currentPassword: String,

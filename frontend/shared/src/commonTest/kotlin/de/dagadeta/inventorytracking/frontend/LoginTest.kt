@@ -5,8 +5,9 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.SemanticsMatcher.Companion.expectValue
 import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.text.AnnotatedString
-import de.dagadeta.inventorytracking.frontend.http.Credentials.*
-import de.dagadeta.inventorytracking.frontend.http.UserRole.USER
+import de.dagadeta.inventorytracking.frontend.Credentials.ErrorMessage
+import de.dagadeta.inventorytracking.frontend.Credentials.NoCredentials
+import de.dagadeta.inventorytracking.frontend.UserAccountAction.LoginAction
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 
@@ -16,7 +17,7 @@ class LoginTest {
   fun `with empty credentials, text fields are empty`() = runComposeUiTest {
     setContent {
       Login(
-          onLoginClick = {},
+          onAction = {},
           credentials = NoCredentials,
       )
     }
@@ -27,16 +28,16 @@ class LoginTest {
   }
 
   @Test
-  fun `text fields show input user name and hidden password`() = runComposeUiTest {
+  fun `even when credentials are known, text fields are initially empty`() = runComposeUiTest {
     setContent {
       Login(
-          onLoginClick = {},
-          credentials = InputCredentials("Karl", "Klammer"),
+          onAction = {},
+          credentials = userHans,
       )
     }
 
-    onNodeWithTag(userNameTag).assert(expectValue(EditableText, AnnotatedString("Karl")))
-    onNodeWithTag(passwordTag).assert(expectValue(EditableText, AnnotatedString("•••••••")))
+    onNodeWithTag(userNameTag).assert(expectValue(EditableText, AnnotatedString("")))
+    onNodeWithTag(passwordTag).assert(expectValue(EditableText, AnnotatedString("")))
     onNodeWithTag(hintTextTag).assertDoesNotExist()
   }
 
@@ -44,39 +45,37 @@ class LoginTest {
   fun `wrong credentials produce a hint text`() = runComposeUiTest {
     setContent {
       Login(
-          onLoginClick = {},
-          credentials = WrongCredentials(InputCredentials("Kurt", "Cobain"), "wrong!"),
+          onAction = {},
+          credentials = ErrorMessage("wrong!"),
       )
     }
 
-    onNodeWithTag(userNameTag).assert(expectValue(EditableText, AnnotatedString("Kurt")))
-    onNodeWithTag(passwordTag).assert(expectValue(EditableText, AnnotatedString("••••••")))
+    onNodeWithTag(userNameTag).assert(expectValue(EditableText, AnnotatedString("")))
+    onNodeWithTag(passwordTag).assert(expectValue(EditableText, AnnotatedString("")))
     onNodeWithTag(hintTextTag).assertTextEquals("wrong!")
   }
 
   @Test
-  fun `text fields show user name and hidden password from UserInfo`() = runComposeUiTest {
-    // under normal circumstances, this should not happen
-    // but the data model does not forbid it, and we should test expected behavior
+  fun `the entered password is hidden`() = runComposeUiTest {
     setContent {
       Login(
-          onLoginClick = {},
-          credentials = UserInfo(InputCredentials("Karl", "Klammer"), USER),
+          onAction = {},
+          credentials = userHans,
       )
     }
 
-    onNodeWithTag(userNameTag).assert(expectValue(EditableText, AnnotatedString("Karl")))
-    onNodeWithTag(passwordTag).assert(expectValue(EditableText, AnnotatedString("•••••••")))
+    onNodeWithTag(passwordTag).performTextInput("secret")
+    onNodeWithTag(passwordTag).assert(expectValue(EditableText, AnnotatedString("••••••")))
     onNodeWithTag(hintTextTag).assertDoesNotExist()
   }
 
   @Test
   fun `login button calls onLoginClick with input credentials`() = runComposeUiTest {
-    var inputCredentials: InputCredentials? = null
+    lateinit var action: LoginAction
     setContent {
       Login(
-          onLoginClick = { inputCredentials = it },
-          credentials = InputCredentials("", ""),
+          onAction = { action = it },
+          credentials = NoCredentials,
       )
     }
 
@@ -84,6 +83,6 @@ class LoginTest {
     onNodeWithTag(passwordTag).performTextInput("Klammer")
     onNodeWithTag(loginButtonTag).performClick()
 
-    inputCredentials shouldBe InputCredentials("Karl", "Klammer")
+    action shouldBe LoginAction("Karl", "Klammer")
   }
 }
