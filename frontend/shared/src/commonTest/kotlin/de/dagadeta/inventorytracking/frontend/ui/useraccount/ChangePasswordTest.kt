@@ -14,6 +14,7 @@ class ChangePasswordTest {
   fun `the change password form is initialized with empty text fields`() = runComposeUiTest {
     setContent {
       ChangePassword(
+          onCancelClick = {},
           onSubmitClick = { _, _ -> },
       )
     }
@@ -22,6 +23,7 @@ class ChangePasswordTest {
     onNodeWithTag(currentPasswordTag).assert(expectValue(EditableText, AnnotatedString("")))
     onNodeWithTag(newPasswordTag).assert(expectValue(EditableText, AnnotatedString("")))
     onNodeWithTag(newPasswordRepeatedTag).assert(expectValue(EditableText, AnnotatedString("")))
+    onNodeWithTag(cancelButtonTag).assertTextEquals("Cancel")
     onNodeWithTag(submitButtonTag).assertTextEquals("Submit")
   }
 
@@ -31,6 +33,7 @@ class ChangePasswordTest {
         var invoked = false
         setContent {
           ChangePassword(
+              onCancelClick = {},
               onSubmitClick = { _, _ -> invoked = true },
           )
         }
@@ -46,6 +49,7 @@ class ChangePasswordTest {
         var invoked = false
         setContent {
           ChangePassword(
+              onCancelClick = {},
               onSubmitClick = { _, _ -> invoked = true },
           )
         }
@@ -65,6 +69,7 @@ class ChangePasswordTest {
     lateinit var newPassword: String
     setContent {
       ChangePassword(
+          onCancelClick = {},
           onSubmitClick = { current, new ->
             currentPassword = current
             newPassword = new
@@ -79,5 +84,20 @@ class ChangePasswordTest {
 
     currentPassword shouldBe "current password"
     newPassword shouldBe "new password"
+  }
+
+  @Test
+  fun `the cancel button invokes onCancelClick action`() = runComposeUiTest {
+    var invoked = false
+    setContent {
+      ChangePassword(
+          onCancelClick = { invoked = true },
+          onSubmitClick = { _, _ -> },
+      )
+    }
+
+    onNodeWithTag(cancelButtonTag).assertIsEnabled().performClick()
+
+    invoked shouldBe true
   }
 }

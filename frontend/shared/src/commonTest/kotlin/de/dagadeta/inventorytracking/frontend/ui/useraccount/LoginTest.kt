@@ -26,6 +26,7 @@ class LoginTest {
     onNodeWithTag(userNameTag).assert(expectValue(EditableText, AnnotatedString("")))
     onNodeWithTag(passwordTag).assert(expectValue(EditableText, AnnotatedString("")))
     onNodeWithTag(hintTextTag).assertDoesNotExist()
+    onNodeWithTag(loginButtonTag).assertIsNotEnabled()
   }
 
   @Test
@@ -82,7 +83,7 @@ class LoginTest {
 
     onNodeWithTag(userNameTag).performTextInput("Karl")
     onNodeWithTag(passwordTag).performTextInput("Klammer")
-    onNodeWithTag(loginButtonTag).performClick()
+    onNodeWithTag(loginButtonTag).assertIsEnabled().performClick()
 
     action shouldBe LoginAction("Karl", "Klammer")
   }

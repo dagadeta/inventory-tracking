@@ -30,7 +30,7 @@ class UserAccountViewModel(
       is LoginAction -> login(action.userName, action.password)
       LogoutAction -> logout()
       is ChangePasswordAction -> changePassword(action.currentPassword, action.newPassword)
-      ShowPasswordChangeAction -> showChangePasswordDialog()
+      TogglePasswordChangeAction -> toggleChangePasswordDialog()
     }
   }
 
@@ -51,7 +51,7 @@ class UserAccountViewModel(
     state.update { it.copy(credentials = NoCredentials) }
   }
 
-  private fun showChangePasswordDialog() {
+  private fun toggleChangePasswordDialog() {
     updateTexts()
     togglePasswordChangeDialog()
   }
@@ -122,7 +122,7 @@ sealed interface UserAccountAction {
 
   object LogoutAction : UserAccountAction
 
-  object ShowPasswordChangeAction : UserAccountAction
+  object TogglePasswordChangeAction : UserAccountAction
 
   data class ChangePasswordAction(val currentPassword: String, val newPassword: String) :
       UserAccountAction
