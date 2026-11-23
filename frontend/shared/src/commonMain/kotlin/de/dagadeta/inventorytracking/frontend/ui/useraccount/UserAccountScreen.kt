@@ -52,6 +52,7 @@ fun UserAccountScreen(
 
     if (state.showPasswordChangeDialog) {
       ChangePassword(
+          onCancelClick = { onAction(TogglePasswordChangeAction) },
           onSubmitClick = { currentPassword, newPassword ->
             onAction(ChangePasswordAction(currentPassword, newPassword))
           },
@@ -60,7 +61,7 @@ fun UserAccountScreen(
     } else {
       Spacer(modifier = Modifier.height(16.dp))
       Button(
-          onClick = { onAction(ShowPasswordChangeAction) },
+          onClick = { onAction(TogglePasswordChangeAction) },
           modifier = Modifier.testTag(changePasswordButtonTag),
       ) {
         Text("Change password")

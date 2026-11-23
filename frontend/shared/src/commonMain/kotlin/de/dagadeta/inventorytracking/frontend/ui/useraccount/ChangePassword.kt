@@ -1,9 +1,6 @@
 package de.dagadeta.inventorytracking.frontend.ui.useraccount
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -24,10 +21,12 @@ const val changePasswordHeaderTag = "change-password"
 const val currentPasswordTag = "current-password"
 const val newPasswordTag = "new-password"
 const val newPasswordRepeatedTag = "new-password-repeated"
+const val cancelButtonTag = "cancel"
 const val submitButtonTag = "submit"
 
 @Composable
 fun ChangePassword(
+    onCancelClick: () -> Unit,
     onSubmitClick: (currentPassword: String, newPassword: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -92,12 +91,23 @@ fun ChangePassword(
 
     Spacer(modifier = Modifier.height(16.dp))
 
-    Button(
-        onClick = { onSubmitClick(currentPassword, newPassword) },
-        modifier = Modifier.fillMaxWidth().testTag(submitButtonTag),
-        enabled = submitEnabled,
+    Row(
+        modifier = Modifier.fillMaxWidth(),
     ) {
-      Text("Submit")
+      Button(
+          onClick = { onCancelClick() },
+          modifier = Modifier.testTag(cancelButtonTag),
+      ) {
+        Text("Cancel")
+      }
+      Spacer(Modifier.width(8.dp))
+      Button(
+          onClick = { onSubmitClick(currentPassword, newPassword) },
+          modifier = Modifier.testTag(submitButtonTag),
+          enabled = submitEnabled,
+      ) {
+        Text("Submit")
+      }
     }
   }
 }

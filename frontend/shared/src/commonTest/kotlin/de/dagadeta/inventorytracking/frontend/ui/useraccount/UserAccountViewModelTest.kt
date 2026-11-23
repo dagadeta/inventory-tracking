@@ -92,6 +92,15 @@ class UserAccountViewModelTest : MainDispatcherTest(), MokkerySuiteScope {
   }
 
   @Test
+  fun `the TogglePasswordChange action toggles showPasswordChangeDialog`() = runTest {
+    viewModel.onAction(TogglePasswordChangeAction)
+    viewModel.state.value shouldBe UserAccountState(showPasswordChangeDialog = true)
+
+    viewModel.onAction(TogglePasswordChangeAction)
+    viewModel.state.value shouldBe UserAccountState(showPasswordChangeDialog = false)
+  }
+
+  @Test
   fun `the ChangePasswordAction with a successful change emits an infoText and closes the dialog`() =
       changePasswordTest(
           changePasswordResult = Success(ChangePasswordResponseDto(SUCCESS)),
@@ -140,7 +149,7 @@ class UserAccountViewModelTest : MainDispatcherTest(), MokkerySuiteScope {
       expectedStage: UserAccountState,
   ) = runTest {
     everySuspend { api.changePassword(any(), any()) } returns changePasswordResult
-    viewModel.onAction(ShowPasswordChangeAction)
+    viewModel.onAction(TogglePasswordChangeAction)
     viewModel.state.value shouldBe UserAccountState(showPasswordChangeDialog = true)
 
     viewModel.onAction(ChangePasswordAction("current", "new"))

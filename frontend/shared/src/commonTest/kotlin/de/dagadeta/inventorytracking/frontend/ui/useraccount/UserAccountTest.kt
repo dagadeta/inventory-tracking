@@ -34,7 +34,7 @@ class UserAccountTest {
   }
 
   @Test
-  fun `password change button calls onAction`() = runComposeUiTest {
+  fun `password change button calls onAction with TogglePasswordChangeAction`() = runComposeUiTest {
     lateinit var action: UserAccountAction
     setContent {
       UserAccountScreen(
@@ -43,9 +43,28 @@ class UserAccountTest {
       )
     }
 
+    onNodeWithTag(cancelButtonTag).assertDoesNotExist()
     onNodeWithTag(changePasswordButtonTag).performClick()
 
-    action shouldBe ShowPasswordChangeAction
+    action shouldBe TogglePasswordChangeAction
+  }
+
+  @Test
+  fun `cancel button calls onAction with TogglePasswordChangeAction`() = runComposeUiTest {
+    lateinit var action: UserAccountAction
+    setContent {
+      UserAccountScreen(
+          UserAccountState(
+              credentials = userHans,
+              showPasswordChangeDialog = true,
+          ),
+          { action = it },
+      )
+    }
+
+    onNodeWithTag(cancelButtonTag).assertExists().performClick()
+
+    action shouldBe TogglePasswordChangeAction
   }
 
   @Test
