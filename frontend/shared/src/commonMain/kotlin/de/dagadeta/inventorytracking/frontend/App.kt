@@ -11,23 +11,27 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import de.dagadeta.inventorytracking.frontend.http.API
 import de.dagadeta.inventorytracking.frontend.http.HttpAPI
-import de.dagadeta.inventorytracking.frontend.http.fakeAPI
 import de.dagadeta.inventorytracking.frontend.theme.AppTheme
+import de.dagadeta.inventorytracking.frontend.ui.inventory.InventoryViewModel
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.Login
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountViewModel
+import de.dagadeta.inventorytracking.frontend.ui.users.UsersViewModel
 
 @Composable fun App() = ConnectedApp(HttpAPI())
-
-@Composable @Preview fun PreviewApp() = ConnectedApp(fakeAPI)
 
 @Composable
 fun ConnectedApp(
     api: API,
     userAccountViewModel: UserAccountViewModel = viewModel { UserAccountViewModel(api) },
+    inventoryViewModel: InventoryViewModel = viewModel { InventoryViewModel(api) },
+    usersViewModel: UsersViewModel = viewModel { UsersViewModel(api) },
 ) {
   val userAccountState by userAccountViewModel.state.collectAsState()
+  val inventoryState by inventoryViewModel.state.collectAsState()
+  val usersState by usersViewModel.state.collectAsState()
 
   AppTheme {
     Surface(
@@ -48,9 +52,12 @@ fun ConnectedApp(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
           MainAppNavigation(
-              api = api,
               userAccountState = userAccountState,
-              onAction = userAccountViewModel::onAction,
+              onUserAccountAction = userAccountViewModel::onAction,
+              inventoryState = inventoryState,
+              onInventoryAction = inventoryViewModel::onAction,
+              usersState = usersState,
+              onUsersAction = usersViewModel::onAction,
           )
         }
       }

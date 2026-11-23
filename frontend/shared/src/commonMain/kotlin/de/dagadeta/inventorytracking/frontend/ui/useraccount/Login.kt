@@ -1,4 +1,4 @@
-package de.dagadeta.inventorytracking.frontend
+package de.dagadeta.inventorytracking.frontend.ui.useraccount
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -19,8 +19,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import de.dagadeta.inventorytracking.frontend.Credentials.ErrorMessage
-import de.dagadeta.inventorytracking.frontend.UserAccountAction.LoginAction
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.Credentials.ErrorMessage
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountAction.LoginAction
 
 const val userNameTag = "user-name"
 const val passwordTag = "password"

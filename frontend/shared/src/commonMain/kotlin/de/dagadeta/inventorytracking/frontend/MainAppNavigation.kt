@@ -14,9 +14,18 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.dp
-import de.dagadeta.inventorytracking.frontend.UserRole.ADMIN
-import de.dagadeta.inventorytracking.frontend.UserRole.USER
-import de.dagadeta.inventorytracking.frontend.http.API
+import de.dagadeta.inventorytracking.frontend.ui.inventory.InventoryAction
+import de.dagadeta.inventorytracking.frontend.ui.inventory.InventoryScreen
+import de.dagadeta.inventorytracking.frontend.ui.inventory.InventoryState
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountAction
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountScreen
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountState
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserRole
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserRole.ADMIN
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserRole.USER
+import de.dagadeta.inventorytracking.frontend.ui.users.UsersAction
+import de.dagadeta.inventorytracking.frontend.ui.users.UsersScreen
+import de.dagadeta.inventorytracking.frontend.ui.users.UsersState
 import inventory_tracking.frontend.shared.generated.resources.*
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -36,9 +45,12 @@ private data class NavItem(
 
 @Composable
 fun MainAppNavigation(
-    api: API,
     userAccountState: UserAccountState,
-    onAction: (UserAccountAction) -> Unit,
+    onUserAccountAction: (UserAccountAction) -> Unit,
+    inventoryState: InventoryState,
+    onInventoryAction: (InventoryAction) -> Unit,
+    usersState: UsersState,
+    onUsersAction: (UsersAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
   val allNavItems =
@@ -49,12 +61,9 @@ fun MainAppNavigation(
               unselectedIcon = painterResource(Res.drawable.view_list),
               minRole = USER,
               content = {
-                PageableList(
-                    header = "Inventory",
-                    fetchItems = { api.fetchInventoryItems() },
-                    describeItem = {
-                      "${it.name} - total: ${it.totalAmount}, lent: ${it.lentAmount}, remaining: ${it.remainingAmount}"
-                    },
+                InventoryScreen(
+                    inventoryState,
+                    onInventoryAction,
                     modifier = Modifier.testTag(inventoryListTag),
                 )
               },
@@ -65,10 +74,9 @@ fun MainAppNavigation(
               unselectedIcon = painterResource(Res.drawable.group),
               minRole = ADMIN,
               content = {
-                PageableList(
-                    header = "Users",
-                    fetchItems = { api.fetchUsers() },
-                    describeItem = { "${it.name}: ${it.role}" },
+                UsersScreen(
+                    usersState,
+                    onUsersAction,
                     modifier = Modifier.testTag(usersListTag),
                 )
               },
@@ -79,9 +87,9 @@ fun MainAppNavigation(
               unselectedIcon = painterResource(Res.drawable.account),
               minRole = USER,
               content = {
-                UserAccount(
+                UserAccountScreen(
                     userAccountState,
-                    onAction,
+                    onUserAccountAction,
                     modifier = Modifier.testTag(userAccountTag),
                 )
               },

@@ -1,4 +1,4 @@
-package de.dagadeta.inventorytracking.frontend
+package de.dagadeta.inventorytracking.frontend.ui.useraccount
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
@@ -12,7 +12,8 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import de.dagadeta.inventorytracking.frontend.UserAccountAction.*
+import de.dagadeta.inventorytracking.frontend.listColumnTag
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountAction.*
 
 const val accountHeaderTag = "account-header"
 const val userRoleTag = "user-role"
@@ -23,7 +24,7 @@ const val errorTextTag = "error-text"
 const val logoutButtonTag = "logout-button"
 
 @Composable
-fun UserAccount(
+fun UserAccountScreen(
     state: UserAccountState,
     onAction: (UserAccountAction) -> Unit,
     modifier: Modifier = Modifier,

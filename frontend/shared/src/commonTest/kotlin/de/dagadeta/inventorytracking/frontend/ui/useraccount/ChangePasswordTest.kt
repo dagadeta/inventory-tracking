@@ -1,4 +1,4 @@
-package de.dagadeta.inventorytracking.frontend
+package de.dagadeta.inventorytracking.frontend.ui.useraccount
 
 import androidx.compose.ui.semantics.SemanticsProperties.EditableText
 import androidx.compose.ui.test.*

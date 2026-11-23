@@ -1,13 +1,14 @@
-package de.dagadeta.inventorytracking.frontend
+package de.dagadeta.inventorytracking.frontend.ui.useraccount
 
 import androidx.compose.ui.semantics.SemanticsProperties.EditableText
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.SemanticsMatcher.Companion.expectValue
 import androidx.compose.ui.test.v2.runComposeUiTest
 import androidx.compose.ui.text.AnnotatedString
-import de.dagadeta.inventorytracking.frontend.Credentials.ErrorMessage
-import de.dagadeta.inventorytracking.frontend.Credentials.NoCredentials
-import de.dagadeta.inventorytracking.frontend.UserAccountAction.LoginAction
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.Credentials.ErrorMessage
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.Credentials.NoCredentials
+import de.dagadeta.inventorytracking.frontend.ui.useraccount.UserAccountAction.LoginAction
+import de.dagadeta.inventorytracking.frontend.userHans
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 
