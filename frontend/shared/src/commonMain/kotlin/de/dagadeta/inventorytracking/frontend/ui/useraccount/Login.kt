@@ -85,6 +85,7 @@ fun Login(
     Button(
         onClick = { onAction(LoginAction(userName, password)) },
         modifier = Modifier.fillMaxWidth().testTag(loginButtonTag),
+        enabled = userName.isNotBlank() && password.isNotBlank(),
     ) {
       Text(text = "Log in")
     }
