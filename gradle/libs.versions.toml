@@ -15,6 +15,7 @@ mockito-kotlin = "6.4.0"
 mokkery = "3.6.0"
 spring = "4.2.0"
 spring-dependency-management = "1.1.7"
+springdoc = "3.2.1"
 zonky = "2.8.0"
 
 [libraries]
@@ -42,6 +43,7 @@ ktor-client-serialization = { group = "io.ktor", name = "ktor-client-serializati
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-kotlin" }
+springdoc-openapi-starter-webmvc-ui = { group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
 zonky = { module = "io.zonky.test:embedded-database-spring-test", version.ref = "zonky" }
 
 [plugins]

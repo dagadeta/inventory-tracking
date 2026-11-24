@@ -24,8 +24,9 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-validation")
   implementation("org.springframework.boot:spring-boot-starter-webmvc")
   implementation("tools.jackson.module:jackson-module-kotlin")
-  implementation(project(":common"))
   implementation(libs.kotlin.logging)
+  implementation(libs.springdoc.openapi.starter.webmvc.ui)
+  implementation(project(":common"))
 
   runtimeOnly("org.postgresql:postgresql")
 

@@ -5,6 +5,7 @@ import de.dagadeta.inventorytracking.backend.persistance.UserRole
 import de.dagadeta.inventorytracking.backend.persistance.UsersRepository
 import de.dagadeta.inventorytracking.common.model.UserDto
 import de.dagadeta.inventorytracking.common.model.UserRoleDto
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
@@ -18,7 +19,9 @@ class UsersController(
     private val usersRepository: UsersRepository,
 ) {
   @GetMapping
-  fun getUsers(@PageableDefault(page = 0, size = 50) pageable: Pageable): Page<UserDto> {
+  fun getUsers(
+      @ParameterObject @PageableDefault(page = 0, size = 50) pageable: Pageable,
+  ): Page<UserDto> {
     return usersRepository.findAll(pageable).map { it.toDto() }
   }
 }

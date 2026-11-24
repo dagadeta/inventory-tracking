@@ -3,7 +3,7 @@
 This project contains of
 
 * a backend service written in Kotlin using Spring Boot and
-* a Kotlin Multiplatform frontend with Web Assembly (Kotlin/WASM) and JVM (Desktop) targets
+* a Kotlin Multiplatform frontend with WebAssembly (Kotlin/WASM) and JVM (Desktop) targets
 
 ## Local development
 
@@ -19,41 +19,31 @@ task:
 ### Start the Frontend
 
 __Desktop with Hot Reload__
+
 ```bash
 ./gradlew frontend:desktopApp:hotRun
 ```
 
 __Desktop (normal)__
+
 ```bash
 ./gradlew frontend:desktopApp:run
 ```
 
 __WebApp__
+
 ```bash
 ./gradlew frontend:webApp:wasmJsBrowserDevelopmentRun
 ```
 
 ### Backend Requests
 
-#### List users with default password
+When the backend is started, an OpenAPI Spec and Swagger UI are served without authentication.
+The root path http://localhost:8080 redirects to it.
 
-```bash
-curl --basic -u 'Admin:very secret' "http://localhost:8080/api/users"
-```
+On first start, two default users get created:
 
-#### List inventory items with default password
+* user `Default User`, password `secret`
+* user `Admin`, password `very secret`
 
-```bash
-curl --basic -u 'Default User:secret' "http://localhost:8080/api/inventory/items"
-```
-
-#### Change password
-
-```bash
-curl --basic -u 'Default User:secret' \
-    -H "Content-Type: application/json" \
-    -X POST \
-    -d '{"currentPassword":"secret","newPassword":"xyz"}' \
-    -i \
-    "http://localhost:8080/api/change-password"
-```
+It is highly recommended to change their passwords soon.
