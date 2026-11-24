@@ -2,7 +2,9 @@ package de.dagadeta.inventorytracking.backend.rest
 
 import de.dagadeta.inventorytracking.backend.domain.InventoryService
 import de.dagadeta.inventorytracking.backend.domain.model.InventoryItemAmounts
+import de.dagadeta.inventorytracking.backend.rest.SortMapping.Mapping
 import de.dagadeta.inventorytracking.common.model.InventoryItemDto
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
@@ -17,7 +19,14 @@ class InventoryController(
 ) {
   @GetMapping
   fun getInventoryItems(
-      @PageableDefault(page = 0, size = 50) pageable: Pageable,
+      @ParameterObject
+      @SortMapping(
+          Mapping(dto = "id", entity = "id"),
+          Mapping(dto = "name", entity = "name"),
+          Mapping(dto = "totalAmount", entity = "amount"),
+      )
+      @PageableDefault(page = 0, size = 50)
+      pageable: Pageable,
   ): Page<InventoryItemDto> {
     return inventoryService.allInventoryItemAmounts(pageable).map { it.toDto() }
   }

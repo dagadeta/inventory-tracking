@@ -166,6 +166,27 @@ class InventoryControllerTest {
         }
   }
 
+  @Test
+  fun `an invalid sort field produces a 400 and an appropriate error message`() {
+    webMvc
+        .get("$inventoryURL?sort=doesNotExist")
+        .andExpect { status { isBadRequest() } }
+        .andExpect {
+          content {
+            json(
+                """
+                |{
+                |  "detail": "Invalid sort field: 'doesNotExist'. Allowed fields: [id, name, totalAmount]",
+                |  "status": 400,
+                |  "title": "Invalid Sort Parameter"
+                |}
+                """
+                    .trimMargin(),
+            )
+          }
+        }
+  }
+
   private fun fiftyInventoryItemsJson() =
       List(50) {
             """{"id":$it,"name":"$it","totalAmount":$it,"lentAmount":0,"remainingAmount":$it}"""
